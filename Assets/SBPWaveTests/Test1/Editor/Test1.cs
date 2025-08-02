@@ -49,7 +49,7 @@ public class Test1
 					assetBundleName=kAssetBundleNames[0],
 					assetBundleVariant=null,
 					assetNames=new[]{
-						$"Assets/SBPWaveTests/Test1/ScriptableObjects/{kAssetNames[0]}.asset"
+						$"{kAssetsBasePath}/ScriptableObjects/{kAssetNames[0]}.asset"
 					},
 					addressableNames=null
 				},
@@ -57,7 +57,7 @@ public class Test1
 					assetBundleName=kAssetBundleNames[1],
 					assetBundleVariant=kAssetBundleVariants[0],
 					assetNames=new[]{
-						$"Assets/SBPWaveTests/Test1/ScriptableObjects/{kAssetBundleVariants[0]}/{kAssetNames[1]}.asset"
+						$"{kAssetsBasePath}/ScriptableObjects/{kAssetBundleVariants[0]}/{kAssetNames[1]}.asset"
 					},
 					addressableNames=null
 				},
@@ -65,7 +65,7 @@ public class Test1
 					assetBundleName=kAssetBundleNames[1],
 					assetBundleVariant=kAssetBundleVariants[1],
 					assetNames=new[]{
-						$"Assets/SBPWaveTests/Test1/ScriptableObjects/{kAssetBundleVariants[1]}/{kAssetNames[1]}.asset"
+						$"{kAssetsBasePath}/ScriptableObjects/{kAssetBundleVariants[1]}/{kAssetNames[1]}.asset"
 					},
 					addressableNames=null
 				},
@@ -75,6 +75,7 @@ public class Test1
 		});
 	}
 
+	private const string kAssetsBasePath = "Assets/SBPWaveTests/Test1";
 	private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/Test1";
 	private readonly string[] kAssetNames = new[]{"Test1Top", "Test1Value" };
 	private readonly string[] kAssetBundleNames = new[]{"assetbundle", "assetbundle2" };
