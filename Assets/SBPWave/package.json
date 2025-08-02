@@ -1,0 +1,19 @@
+{
+  "name": "eral.sbpwave",
+  "version": "0.1.0",
+  "unity": "2023.1",
+  "displayName": "SBP Wave",
+  "description": "Scriptable Build Pipeline with Variant",
+  "dependencies": {
+    "com.unity.scriptablebuildpipeline": "2.4.1"
+ },
+ "keywords": [
+    "Scriptable Build Pipeline",
+    "Variant"
+  ],
+  "author": {
+    "name": "ERAL",
+    "email": "eral.r.l+github.com@gmail.com",
+    "url": "https://github.com/eral"
+  }
+}
