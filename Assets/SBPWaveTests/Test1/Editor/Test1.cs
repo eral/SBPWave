@@ -1,9 +1,10 @@
+using NUnit.Framework;
+using SBPWaveTests;
 using System;
 using System.Collections;
 using System.IO;
-using NUnit.Framework;
-using SBPWaveTests;
 using UnityEditor;
+using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -40,7 +41,7 @@ public class Test1
 
 	[SetUp]
 	public void Test1Setup() {
-		CreateFolder(kAssetBundlesPath);
+		TestUtility.CreateFolder(kAssetBundlesPath);
 		BuildPipeline.BuildAssetBundles(new BuildAssetBundlesParameters{
 			outputPath=kAssetBundlesPath,
 			bundleDefinitions=new[]{
@@ -48,7 +49,7 @@ public class Test1
 					assetBundleName=kAssetBundleNames[0],
 					assetBundleVariant=null,
 					assetNames=new[]{
-						$"Assets/SBPWaveTests/ScriptableObject/{kAssetNames[0]}.asset"
+						$"Assets/SBPWaveTests/Test1/ScriptableObjects/{kAssetNames[0]}.asset"
 					},
 					addressableNames=null
 				},
@@ -56,7 +57,7 @@ public class Test1
 					assetBundleName=kAssetBundleNames[1],
 					assetBundleVariant=kAssetBundleVariants[0],
 					assetNames=new[]{
-						$"Assets/SBPWaveTests/ScriptableObject/{kAssetBundleVariants[0]}/{kAssetNames[1]}.asset"
+						$"Assets/SBPWaveTests/Test1/ScriptableObjects/{kAssetBundleVariants[0]}/{kAssetNames[1]}.asset"
 					},
 					addressableNames=null
 				},
@@ -64,7 +65,7 @@ public class Test1
 					assetBundleName=kAssetBundleNames[1],
 					assetBundleVariant=kAssetBundleVariants[1],
 					assetNames=new[]{
-						$"Assets/SBPWaveTests/ScriptableObject/{kAssetBundleVariants[1]}/{kAssetNames[1]}.asset"
+						$"Assets/SBPWaveTests/Test1/ScriptableObjects/{kAssetBundleVariants[1]}/{kAssetNames[1]}.asset"
 					},
 					addressableNames=null
 				},
@@ -98,17 +99,5 @@ public class Test1
 		}
 		ab.Unload(true);
 		ab2?.Unload(true);
-	}
-
-	private void CreateFolder(string path, bool endIsFile = false) {
-		if (endIsFile) {
-			path = Path.GetDirectoryName(path);
-		}
-		if (!Directory.Exists(path)) {
-			var parent = Path.GetDirectoryName(path);
-			CreateFolder(parent);
-			var crnt = Path.GetFileName(path);
-			AssetDatabase.CreateFolder(parent, crnt);
-		}
 	}
 }

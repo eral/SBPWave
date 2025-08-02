@@ -1,10 +1,9 @@
 {
-    "name": "SBPWaveTests.Editor",
+    "name": "SBPWaveTests.Internal.Editor",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner",
-        "SBPWaveTests"
+        "UnityEditor.TestRunner"
     ],
     "includePlatforms": [
         "Editor"
