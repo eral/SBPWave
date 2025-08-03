@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SBPWaveTests {
+namespace eral.SBPWave.Test.Test1 {
 
 	[CreateAssetMenu(menuName="SBPWaveTests/Test1Top")]
 	public class Test1Top : ScriptableObject {
