@@ -11,38 +11,50 @@ namespace eral.SBPWave.Test.Test1.Editor {
 	public class Test1 {
 		[UnityTest]
 		public IEnumerator LoadNormal() {
-			yield return LoadAndTest(kAssetBundleVariants[0], (asset, ab)=>{
-				Assert.True(asset != null);
-				Assert.AreEqual(kAssetNames[1], asset.name);
-				Assert.AreEqual(10001, asset.Value);
-				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[0]}", ab.name);
-			});
+			yield return TestNormal(TestUtility.Style.SBPWave);
 		}
 
 		[UnityTest]
 		public IEnumerator LoadVariant() {
-			yield return LoadAndTest(kAssetBundleVariants[1], (asset, ab)=>{
-				Assert.True(asset != null);
-				Assert.AreEqual(kAssetNames[1], asset.name);
-				Assert.AreEqual(10002, asset.Value);
-				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[1]}", ab.name);
-			});
+			yield return TestVariant(TestUtility.Style.SBPWave);
 		}
 
 		[UnityTest]
 		public IEnumerator NoLoad() {
-			yield return LoadAndTest(null, (asset, ab)=>{
-				Assert.True(asset == null);
-				Assert.AreNotEqual(null, asset);
-				Assert.AreEqual(null, ab);
-			});
+			yield return TestNoLoad(TestUtility.Style.SBPWave);
+		}
+
+		[UnityTest]
+		public IEnumerator LoadNormalBuiltin() {
+			yield return TestNormal(TestUtility.Style.Builtin);
+		}
+
+		[UnityTest]
+		public IEnumerator LoadVariantBuiltin() {
+			yield return TestVariant(TestUtility.Style.Builtin);
+		}
+
+		[UnityTest]
+		public IEnumerator NoLoadBuiltin() {
+			yield return TestNoLoad(TestUtility.Style.Builtin);
 		}
 
 		[SetUp]
 		public void Test1Setup() {
-			TestUtility.CreateFolder(kAssetBundlesPath);
-			BuildPipeline.BuildAssetBundles(new BuildAssetBundlesParameters{
-				outputPath=kAssetBundlesPath,
+			TestUtility.CallAllStyles(CreateAssetBundles);
+		}
+
+		private const string kAssetsBasePath = "Assets/SBPWaveTests/Test1";
+		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/Test1";
+		private readonly string[] kAssetNames = new[]{"Test1Top", "Test1Value" };
+		private readonly string[] kAssetBundleNames = new[]{"assetbundle", "assetbundle2" };
+		private readonly string[] kAssetBundleVariants = new[]{"int10001", "int10002" };
+
+		private void CreateAssetBundles(TestUtility.Style style) {
+			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
+			TestUtility.CreateFolder(assetBundlesPath);
+			TestUtility.BuildAssetBundles(style, new BuildAssetBundlesParameters{
+				outputPath=assetBundlesPath,
 				bundleDefinitions=new[]{
 					new AssetBundleBuild{
 						assetBundleName=kAssetBundleNames[0],
@@ -74,17 +86,38 @@ namespace eral.SBPWave.Test.Test1.Editor {
 			});
 		}
 
-		private const string kAssetsBasePath = "Assets/SBPWaveTests/Test1";
-		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/Test1";
-		private readonly string[] kAssetNames = new[]{"Test1Top", "Test1Value" };
-		private readonly string[] kAssetBundleNames = new[]{"assetbundle", "assetbundle2" };
-		private readonly string[] kAssetBundleVariants = new[]{"int10001", "int10002" };
+		private IEnumerator TestNormal(TestUtility.Style style) {
+			yield return LoadAndTest(style, kAssetBundleVariants[0], (asset, ab)=>{
+				Assert.True(asset != null);
+				Assert.AreEqual(kAssetNames[1], asset.name);
+				Assert.AreEqual(10001, asset.Value);
+				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[0]}", ab.name);
+			});
+		}
 
-		private IEnumerator LoadAndTest(string variant, Action<Test1IntValue, AssetBundle> test) {
-			var abcReq = AssetBundle.LoadFromFileAsync($"{kAssetBundlesPath}/{kAssetBundleNames[0]}");
+		private IEnumerator TestVariant(TestUtility.Style style) {
+			yield return LoadAndTest(style, kAssetBundleVariants[1], (asset, ab)=>{
+				Assert.True(asset != null);
+				Assert.AreEqual(kAssetNames[1], asset.name);
+				Assert.AreEqual(10002, asset.Value);
+				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[1]}", ab.name);
+			});
+		}
+
+		private IEnumerator TestNoLoad(TestUtility.Style style) {
+			yield return LoadAndTest(style, null, (asset, ab)=>{
+				Assert.True(asset == null);
+				Assert.AreNotEqual(null, asset);
+				Assert.AreEqual(null, ab);
+			});
+		}
+
+		private IEnumerator LoadAndTest(TestUtility.Style style, string variant, Action<Test1IntValue, AssetBundle> test) {
+			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
+			var abcReq = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleNames[0]}");
 			AssetBundleCreateRequest abcReq2 = null;
 			if (variant != null) {
-				abcReq2 = AssetBundle.LoadFromFileAsync($"{kAssetBundlesPath}/{kAssetBundleNames[1]}.{variant}");
+				abcReq2 = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleNames[1]}.{variant}");
 				yield return abcReq2;
 			}
 			yield return abcReq;

@@ -1,5 +1,8 @@
 using System.IO;
+using System.Linq;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.Build.Pipeline;
 
 namespace eral.SBPWave.Test.Internal.Editor {
 
@@ -16,6 +19,46 @@ namespace eral.SBPWave.Test.Internal.Editor {
 		public static void CreateFolderWhenEndIsFile(string path) {
 			path = Path.GetDirectoryName(path);
 			CreateFolder(path);
+		}
+
+		public enum Style {
+			SBPWave,
+			Builtin,
+		}
+
+		public static void CallAllStyles(System.Action<Style> action) {
+			foreach (Style i in System.Enum.GetValues(typeof(Style))) {
+				action(i);
+			}
+		}
+
+		public static string AddStyleStringToEnd(Style style, string src) {
+			return $"{src}{style}";
+		}
+
+		public static CompatibilityAssetBundleManifest BuildAssetBundles(Style style, BuildAssetBundlesParameters buildParameters) {
+			var buildAssetBundles = new System.Func<BuildAssetBundlesParameters, CompatibilityAssetBundleManifest>[]{
+				CompatibilityBuildPipeline.BuildAssetBundles,
+				BuildAssetBundlesBuiltin,
+			};
+			return buildAssetBundles[(int)style](buildParameters);
+		}
+
+		private static CompatibilityAssetBundleManifest BuildAssetBundlesBuiltin(BuildAssetBundlesParameters buildParameters) {
+			var manifestBuiltin = BuildPipeline.BuildAssetBundles(buildParameters);
+			var results = manifestBuiltin.GetAllAssetBundles().ToDictionary(x=>x, x=>{
+				BuildPipeline.GetCRCForAssetBundle($"{buildParameters.outputPath}/{x}", out uint crc);
+				return new BundleDetails{
+					FileName = x,
+					Crc = crc,
+					Hash = manifestBuiltin.GetAssetBundleHash(x),
+					Dependencies = manifestBuiltin.GetDirectDependencies(x),
+				};
+			});
+				
+			var manifest = ScriptableObject.CreateInstance<CompatibilityAssetBundleManifest>();
+			manifest.SetResults(results);
+			return manifest;
 		}
 	}
 

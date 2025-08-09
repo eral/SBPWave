@@ -4,6 +4,7 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
+        "Unity.ScriptableBuildPipeline",
         "SBPWaveTests.Internal.Editor",
         "SBPWaveTests.Test1"
     ],
