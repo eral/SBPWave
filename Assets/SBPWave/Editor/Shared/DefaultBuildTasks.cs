@@ -1,5 +1,7 @@
+using eral.SBPWave.Tasks;
 using System.Collections.Generic;
 using UnityEditor.Build.Pipeline.Interfaces;
+using UnityEditor.Build.Pipeline.Tasks;
 
 namespace eral.SBPWave {
 	using super = UnityEditor.Build.Pipeline.DefaultBuildTasks;
@@ -33,7 +35,30 @@ namespace eral.SBPWave {
 			return buildTasks;
 		}
 
-		private static void SupportVariant(IList<IBuildTask> buildTasks) {
+		public static void SupportVariant(IList<IBuildTask> buildTasks) {
+			for (int i = 0; i < buildTasks.Count; i++) {
+				var buildTaskType = buildTasks[i].GetType();
+				if (buildTaskType == typeof(CalculateSceneDependencyData)) {
+					if ((i <= 0) || (buildTasks[i - 1] is not ExportVariantMap)) {
+						buildTasks.Insert(i, new ExportVariantMap());
+						++i;
+					}
+					if ((i <= 1) || (buildTasks[i - 2] is not GenerateVariantMap)) {
+						buildTasks.Insert(i - 1, new GenerateVariantMap());
+						++i;
+					}
+				} else if (buildTaskType == typeof(WriteSerializedFiles)) {
+					if ((i <= 0) || (buildTasks[i - 1] is not VariantlizeLinkDestination)) {
+						buildTasks.Insert(i, new VariantlizeLinkDestination());
+						++i;
+					}
+				} else if (buildTaskType == typeof(ArchiveAndCompressBundles)) {
+					if ((i <= 0) || (buildTasks[i - 1] is not VariantlizeArchives)) {
+						buildTasks.Insert(i, new VariantlizeArchives());
+						++i;
+					}
+				}
+			}
 		}
 	}
 }

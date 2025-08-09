@@ -5,7 +5,7 @@
   "displayName": "SBP Wave",
   "description": "Scriptable Build Pipeline with Variant",
   "dependencies": {
-    "com.unity.scriptablebuildpipeline": "2.4.1"
+    "com.unity.scriptablebuildpipeline": "2.4.0"
  },
  "keywords": [
     "Scriptable Build Pipeline",

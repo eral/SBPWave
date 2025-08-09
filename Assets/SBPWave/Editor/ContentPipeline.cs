@@ -8,12 +8,33 @@ namespace eral.SBPWave {
 	public static class ContentPipeline {
 		public static ReturnCode BuildAssetBundles(IBundleBuildParameters parameters, IBundleBuildContent content, out IBundleBuildResults result) {
 			var taskList = DefaultBuildTasks.Create(DefaultBuildTasks.Preset.AssetBundleCompatible);
-			return BuildAssetBundles(parameters, content, out result, taskList);
+			return BuildAssetBundles_Internal(parameters, content, out result, taskList);
 		}
 
 		public static ReturnCode BuildAssetBundles(IBundleBuildParameters parameters, IBundleBuildContent content, out IBundleBuildResults result, IList<IBuildTask> taskList, params IContextObject[] contextObjects) {
+			DefaultBuildTasks.SupportVariant(taskList);
+			return BuildAssetBundles_Internal(parameters, content, out result, taskList, contextObjects);
+		}
+
+		private static ReturnCode BuildAssetBundles_Internal(IBundleBuildParameters parameters, IBundleBuildContent content, out IBundleBuildResults result, IList<IBuildTask> taskList, params IContextObject[] contextObjects) {
+			SupportVariant(ref contextObjects);
 			return super.BuildAssetBundles(parameters, content, out result, taskList, contextObjects);
 		}
+
+		private static void SupportVariant(ref IContextObject[] contextObjects) {
+			for (int i = 0; i < contextObjects.Length; i++) {
+				var contextObject = contextObjects[i];
+				if (contextObject is IDeterministicIdentifiers deterministicIdentifiers) {
+					if (contextObject is not VariantPackedIdentifiers) {
+						contextObjects[i] = new VariantPackedIdentifiers(deterministicIdentifiers);
+					}
+					return;
+				}
+			}
+			System.Array.Resize(ref contextObjects, contextObjects.Length + 1);
+			contextObjects[^1] = new VariantPackedIdentifiers();
+		}
+
 	}
 
 }

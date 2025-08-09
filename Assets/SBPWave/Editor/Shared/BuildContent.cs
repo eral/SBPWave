@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
-using UnityEngine;
 
 namespace eral.SBPWave {
 	using super = UnityEditor.Build.Pipeline.BundleBuildContent;
@@ -17,10 +16,7 @@ namespace eral.SBPWave {
 				assetBundleName = ((isNotVariant)? bundleBuild.assetBundleName: $"{bundleBuild.assetBundleName}.{bundleBuild.assetBundleVariant}"),
 				assetBundleVariant = null ,
 				assetNames = bundleBuild.assetNames,
-				addressableNames = bundleBuild.addressableNames ?? ((isNotVariant)
-				                                                   ? bundleBuild.assetNames.Select(x=>Path.GetFileNameWithoutExtension(x))
-				                                                   : bundleBuild.assetNames.Select(x=>$"{bundleBuild.assetBundleVariant}/{Path.GetFileNameWithoutExtension(x)}")
-				                                                   ).ToArray(),
+				addressableNames = bundleBuild.addressableNames ?? bundleBuild.assetNames.Select(x=>Path.GetFileNameWithoutExtension(x)).ToArray(),
 			};
 		}
 	}
