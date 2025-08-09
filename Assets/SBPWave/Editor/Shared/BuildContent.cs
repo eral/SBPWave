@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -11,16 +12,16 @@ namespace eral.SBPWave {
 		}
 
 		private static AssetBundleBuild SupportVariant(AssetBundleBuild bundleBuild) {
-			if (string.IsNullOrEmpty(bundleBuild.assetBundleVariant)) {
-				return bundleBuild;
-			} else {
-				return new AssetBundleBuild{
-					assetBundleName = $"{bundleBuild.assetBundleName}.{bundleBuild.assetBundleVariant}",
-					assetBundleVariant = null ,
-					assetNames = bundleBuild.assetNames,
-					addressableNames = bundleBuild.addressableNames,
-				};
-			}
+			var isNotVariant = string.IsNullOrEmpty(bundleBuild.assetBundleVariant);
+			return new AssetBundleBuild{
+				assetBundleName = ((isNotVariant)? bundleBuild.assetBundleName: $"{bundleBuild.assetBundleName}.{bundleBuild.assetBundleVariant}"),
+				assetBundleVariant = null ,
+				assetNames = bundleBuild.assetNames,
+				addressableNames = bundleBuild.addressableNames ?? ((isNotVariant)
+				                                                   ? bundleBuild.assetNames.Select(x=>Path.GetFileNameWithoutExtension(x))
+				                                                   : bundleBuild.assetNames.Select(x=>$"{bundleBuild.assetBundleVariant}/{Path.GetFileNameWithoutExtension(x)}")
+				                                                   ).ToArray(),
+			};
 		}
 	}
 
