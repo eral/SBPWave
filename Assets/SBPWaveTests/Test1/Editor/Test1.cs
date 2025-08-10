@@ -25,6 +25,11 @@ namespace eral.SBPWave.Test.Test1.Editor {
 		}
 
 		[UnityTest]
+		public IEnumerator LoadAssetDirectFromVariant() {
+			yield return TestLoadAssetDirectFromVariant(TestUtility.Style.SBPWave);
+		}
+
+		[UnityTest]
 		public IEnumerator LoadNormalBuiltin() {
 			yield return TestNormal(TestUtility.Style.Builtin);
 		}
@@ -39,6 +44,11 @@ namespace eral.SBPWave.Test.Test1.Editor {
 			yield return TestNoLoad(TestUtility.Style.Builtin);
 		}
 
+		[UnityTest]
+		public IEnumerator LoadAssetDirectFromVariantBuiltin() {
+			yield return TestLoadAssetDirectFromVariant(TestUtility.Style.Builtin);
+		}
+
 		[SetUp]
 		public void Test1Setup() {
 			TestUtility.CallAllStyles(CreateAssetBundles);
@@ -46,9 +56,10 @@ namespace eral.SBPWave.Test.Test1.Editor {
 
 		private const string kAssetsBasePath = "Assets/SBPWaveTests/Test1";
 		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/Test1";
-		private readonly string[] kAssetNames = new[]{"Test1Top", "Test1Value" };
-		private readonly string[] kAssetBundleNames = new[]{"assetbundle", "assetbundle2" };
-		private readonly string[] kAssetBundleVariants = new[]{"int10001", "int10002" };
+		private readonly string[] kAssetNames = new[]{"Test1Top", "Test1Value"};
+		private readonly string[] kAssetBundleNames = new[]{"assetbundle", "assetbundle2"};
+		private readonly string[] kAssetBundleVariants = new[]{"int10001", "int10002"};
+		private readonly int[] kAssetBundleVariantValues = new[]{10001, 10002};
 
 		private void CreateAssetBundles(TestUtility.Style style) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
@@ -110,6 +121,23 @@ namespace eral.SBPWave.Test.Test1.Editor {
 				Assert.AreNotEqual(null, asset);
 				Assert.AreEqual(null, ab);
 			});
+		}
+
+		private IEnumerator TestLoadAssetDirectFromVariant(TestUtility.Style style) {
+			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
+			for (var i = 0; i < kAssetBundleVariants.Length; i++) {
+				var abcReq = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleNames[1]}.{kAssetBundleVariants[i]}");
+				yield return abcReq;
+				var ab = abcReq.assetBundle;
+				var abReq = ab.LoadAssetAsync<Test1IntValue>(kAssetNames[1]);
+				yield return abReq;
+				var asset = (Test1IntValue)abReq.asset;
+				{
+					Assert.AreEqual(kAssetNames[1], asset.name);
+					Assert.AreEqual(kAssetBundleVariantValues[i], asset.Value);
+				}
+				ab.Unload(true);
+			}
 		}
 
 		private IEnumerator LoadAndTest(TestUtility.Style style, string variant, Action<Test1IntValue, AssetBundle> test) {
