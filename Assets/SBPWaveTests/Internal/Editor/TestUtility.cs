@@ -36,18 +36,18 @@ namespace eral.SBPWave.Test.Internal.Editor {
 			return $"{src}{style}";
 		}
 
-		public static CompatibilityAssetBundleManifest BuildAssetBundles(Style style, BuildAssetBundlesParameters buildParameters) {
-			var buildAssetBundles = new System.Func<BuildAssetBundlesParameters, CompatibilityAssetBundleManifest>[]{
+		public static CompatibilityAssetBundleManifest BuildAssetBundles(Style style, string outputPath, AssetBundleBuild[] builds, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform) {
+			var buildAssetBundles = new System.Func<string, AssetBundleBuild[], BuildAssetBundleOptions, BuildTarget, CompatibilityAssetBundleManifest>[]{
 				CompatibilityBuildPipeline.BuildAssetBundles,
 				BuildAssetBundlesBuiltin,
 			};
-			return buildAssetBundles[(int)style](buildParameters);
+			return buildAssetBundles[(int)style](outputPath, builds, assetBundleOptions, targetPlatform);
 		}
 
-		private static CompatibilityAssetBundleManifest BuildAssetBundlesBuiltin(BuildAssetBundlesParameters buildParameters) {
-			var manifestBuiltin = BuildPipeline.BuildAssetBundles(buildParameters);
+		private static CompatibilityAssetBundleManifest BuildAssetBundlesBuiltin(string outputPath, AssetBundleBuild[] builds, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform) {
+			var manifestBuiltin = BuildPipeline.BuildAssetBundles(outputPath, builds, assetBundleOptions, targetPlatform);
 			var results = manifestBuiltin.GetAllAssetBundles().ToDictionary(x=>x, x=>{
-				BuildPipeline.GetCRCForAssetBundle($"{buildParameters.outputPath}/{x}", out uint crc);
+				BuildPipeline.GetCRCForAssetBundle($"{outputPath}/{x}", out uint crc);
 				return new BundleDetails{
 					FileName = x,
 					Crc = crc,

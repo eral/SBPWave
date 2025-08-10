@@ -64,37 +64,39 @@ namespace eral.SBPWave.Test.Test1 {
 		private void CreateAssetBundles(TestUtility.Style style) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
 			TestUtility.CreateFolder(assetBundlesPath);
-			TestUtility.BuildAssetBundles(style, new BuildAssetBundlesParameters{
-				outputPath=assetBundlesPath,
-				bundleDefinitions=new[]{
-					new AssetBundleBuild{
-						assetBundleName=kAssetBundleNames[0],
-						assetBundleVariant=null,
-						assetNames=new[]{
-							$"{kAssetsBasePath}/ScriptableObjects/{kAssetNames[0]}.asset"
-						},
-						addressableNames=null
+			var builds = new[]{
+				new AssetBundleBuild{
+					assetBundleName=kAssetBundleNames[0],
+					assetBundleVariant=null,
+					assetNames=new[]{
+						$"{kAssetsBasePath}/ScriptableObjects/{kAssetNames[0]}.asset"
 					},
-					new AssetBundleBuild{
-						assetBundleName=kAssetBundleNames[1],
-						assetBundleVariant=kAssetBundleVariants[0],
-						assetNames=new[]{
-							$"{kAssetsBasePath}/ScriptableObjects/{kAssetBundleVariants[0]}/{kAssetNames[1]}.asset"
-						},
-						addressableNames=null
-					},
-					new AssetBundleBuild{
-						assetBundleName=kAssetBundleNames[1],
-						assetBundleVariant=kAssetBundleVariants[1],
-						assetNames=new[]{
-							$"{kAssetsBasePath}/ScriptableObjects/{kAssetBundleVariants[1]}/{kAssetNames[1]}.asset"
-						},
-						addressableNames=null
-					},
+					addressableNames=null
 				},
-				options=BuildAssetBundleOptions.AssetBundleStripUnityVersion | BuildAssetBundleOptions.StripUnatlasedSpriteCopies | BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension,
-				//targetPlatform=BuildTarget.StandaloneWindows,
-			});
+				new AssetBundleBuild{
+					assetBundleName=kAssetBundleNames[1],
+					assetBundleVariant=kAssetBundleVariants[0],
+					assetNames=new[]{
+						$"{kAssetsBasePath}/ScriptableObjects/{kAssetBundleVariants[0]}/{kAssetNames[1]}.asset"
+					},
+					addressableNames=null
+				},
+				new AssetBundleBuild{
+					assetBundleName=kAssetBundleNames[1],
+					assetBundleVariant=kAssetBundleVariants[1],
+					assetNames=new[]{
+						$"{kAssetsBasePath}/ScriptableObjects/{kAssetBundleVariants[1]}/{kAssetNames[1]}.asset"
+					},
+					addressableNames=null
+				},
+			};
+			var assetBundleOptions = BuildAssetBundleOptions.AssetBundleStripUnityVersion | BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension
+#if UNITY_2022_1_OR_NEWER
+			                       | BuildAssetBundleOptions.StripUnatlasedSpriteCopies
+#endif
+			;
+			var targetPlatform = EditorUserBuildSettings.activeBuildTarget;
+			TestUtility.BuildAssetBundles(style, assetBundlesPath, builds, assetBundleOptions, targetPlatform);
 		}
 
 		private IEnumerator TestNormal(TestUtility.Style style) {
@@ -127,10 +129,10 @@ namespace eral.SBPWave.Test.Test1 {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
 			for (var i = 0; i < kAssetBundleVariants.Length; i++) {
 				var abcReq = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleNames[1]}.{kAssetBundleVariants[i]}");
-				yield return abcReq;
+				while (!abcReq.isDone) yield return null;
 				var ab = abcReq.assetBundle;
 				var abReq = ab.LoadAssetAsync<Test1IntValue>(kAssetNames[1]);
-				yield return abReq;
+				while (!abReq.isDone) yield return null;
 				var asset = (Test1IntValue)abReq.asset;
 				{
 					Assert.AreEqual(kAssetNames[1], asset.name);
@@ -146,13 +148,13 @@ namespace eral.SBPWave.Test.Test1 {
 			AssetBundleCreateRequest abcReq2 = null;
 			if (variant != null) {
 				abcReq2 = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleNames[1]}.{variant}");
-				yield return abcReq2;
+				while (!abcReq2.isDone) yield return null;
 			}
-			yield return abcReq;
+			while (!abcReq.isDone) yield return null;
 			var ab2 = abcReq2?.assetBundle;
 			var ab = abcReq.assetBundle;
 			var abReq = ab.LoadAssetAsync<Test1Top>(kAssetNames[0]);
-			yield return abReq;
+			while (!abReq.isDone) yield return null;
 			var asset = (Test1Top)abReq.asset;
 			{
 				Assert.AreEqual(kAssetNames[0], asset.name);
