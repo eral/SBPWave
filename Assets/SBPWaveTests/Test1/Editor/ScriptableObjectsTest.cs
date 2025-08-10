@@ -89,13 +89,7 @@ namespace eral.SBPWave.Test.Test1 {
 					addressableNames=null
 				},
 			};
-			var assetBundleOptions = BuildAssetBundleOptions.AssetBundleStripUnityVersion | BuildAssetBundleOptions.ForceRebuildAssetBundle | BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension
-#if UNITY_2022_1_OR_NEWER
-			                       | BuildAssetBundleOptions.StripUnatlasedSpriteCopies
-#endif
-			;
-			var targetPlatform = EditorUserBuildSettings.activeBuildTarget;
-			TestUtility.BuildAssetBundles(style, assetBundlesPath, builds, assetBundleOptions, targetPlatform);
+			TestUtility.BuildAssetBundles(style, assetBundlesPath, builds);
 		}
 
 		private IEnumerator TestNormal(TestUtility.Style style) {
