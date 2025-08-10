@@ -28,12 +28,14 @@ namespace eral.SBPWave {
 			return BuildAssetBundles_Internal(outputPath, new BundleBuildContent(builds), assetBundleOptions, targetPlatform);
 		}
 
+#if UNITY_2022_1_OR_NEWER
 		public static CompatibilityAssetBundleManifest BuildAssetBundles(BuildAssetBundlesParameters buildParameters) {
 			if (buildParameters.targetPlatform == 0) {
 				buildParameters.targetPlatform = EditorUserBuildSettings.activeBuildTarget;
 			}
 			return BuildAssetBundles_Internal(buildParameters.outputPath, new BundleBuildContent(buildParameters.bundleDefinitions), buildParameters.options, buildParameters.targetPlatform);
 		}
+#endif
 
         internal static CompatibilityAssetBundleManifest BuildAssetBundles_Internal(string outputPath, IBundleBuildContent content, BuildAssetBundleOptions options, BuildTarget targetPlatform)
         {
