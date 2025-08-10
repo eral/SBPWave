@@ -7,6 +7,14 @@ using UnityEngine.Build.Pipeline;
 namespace eral.SBPWave.Test.Internal.Editor {
 
 	public class TestUtility {
+		public static BuildAssetBundleOptions buildAssetBundleOptions => BuildAssetBundleOptions.AssetBundleStripUnityVersion
+		                                                               | BuildAssetBundleOptions.ChunkBasedCompression
+		                                                               | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension
+#if UNITY_2022_1_OR_NEWER
+		                                                               | BuildAssetBundleOptions.StripUnatlasedSpriteCopies
+#endif
+		                                                               | BuildAssetBundleOptions.ForceRebuildAssetBundle;
+
 		public static void CreateFolder(string path) {
 			if (!Directory.Exists(path)) {
 				var parent = Path.GetDirectoryName(path);
@@ -36,6 +44,9 @@ namespace eral.SBPWave.Test.Internal.Editor {
 			return $"{src}{style}";
 		}
 
+		public static CompatibilityAssetBundleManifest BuildAssetBundles(Style style, string outputPath, AssetBundleBuild[] builds) {
+			return BuildAssetBundles(style, outputPath, builds, buildAssetBundleOptions, EditorUserBuildSettings.activeBuildTarget);
+		}
 		public static CompatibilityAssetBundleManifest BuildAssetBundles(Style style, string outputPath, AssetBundleBuild[] builds, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform) {
 			var buildAssetBundles = new System.Func<string, AssetBundleBuild[], BuildAssetBundleOptions, BuildTarget, CompatibilityAssetBundleManifest>[]{
 				CompatibilityBuildPipeline.BuildAssetBundles,
