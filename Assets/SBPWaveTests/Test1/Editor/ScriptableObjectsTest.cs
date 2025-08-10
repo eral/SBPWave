@@ -6,9 +6,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace eral.SBPWave.Test.Test1.Editor {
+namespace eral.SBPWave.Test.Test1 {
 
-	public class Test1 {
+	public class ScriptableObjectsTest {
 		[UnityTest]
 		public IEnumerator LoadNormal() {
 			yield return TestNormal(TestUtility.Style.SBPWave);
