@@ -101,7 +101,7 @@ namespace eral.SBPWave.Test.Test1.Editor {
 			yield return LoadAndTest(style, kAssetBundleVariants[0], (asset, ab)=>{
 				Assert.True(asset != null);
 				Assert.AreEqual(kAssetNames[1], asset.name);
-				Assert.AreEqual(10001, asset.Value);
+				Assert.AreEqual(kAssetBundleVariantValues[0], asset.Value);
 				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[0]}", ab.name);
 			});
 		}
@@ -110,7 +110,7 @@ namespace eral.SBPWave.Test.Test1.Editor {
 			yield return LoadAndTest(style, kAssetBundleVariants[1], (asset, ab)=>{
 				Assert.True(asset != null);
 				Assert.AreEqual(kAssetNames[1], asset.name);
-				Assert.AreEqual(10002, asset.Value);
+				Assert.AreEqual(kAssetBundleVariantValues[1], asset.Value);
 				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[1]}", ab.name);
 			});
 		}
