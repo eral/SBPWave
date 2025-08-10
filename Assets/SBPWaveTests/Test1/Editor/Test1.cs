@@ -49,8 +49,8 @@ namespace eral.SBPWave.Test.Test1.Editor {
 			yield return TestLoadAssetDirectFromVariant(TestUtility.Style.Builtin);
 		}
 
-		[SetUp]
-		public void Test1Setup() {
+		[OneTimeSetUp]
+		public void OneTimeSetUp() {
 			TestUtility.CallAllStyles(CreateAssetBundles);
 		}
 
