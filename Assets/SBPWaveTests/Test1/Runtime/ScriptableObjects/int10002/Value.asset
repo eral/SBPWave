@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73471a0ec0df8f74481a42d46216595f, type: 3}
-  m_Name: Test1Value
+  m_Name: Value
   m_EditorClassIdentifier: Assembly-CSharp::SBPWaveTests.Test1IntValue
-  m_Value: 10001
+  m_Value: 10002

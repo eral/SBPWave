@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36417562afcba144cb59715250ffddba, type: 3}
-  m_Name: Test1Top
+  m_Name: Top
   m_EditorClassIdentifier: Assembly-CSharp::SBPWaveTests.Test1Nest
   m_Value: {fileID: 11400000, guid: a35197c0ee1228b42ad9506d567ffd7e, type: 2}

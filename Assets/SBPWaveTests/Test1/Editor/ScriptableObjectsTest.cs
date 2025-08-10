@@ -1,6 +1,5 @@
 using eral.SBPWave.Test.Internal.Editor;
 using NUnit.Framework;
-using System;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
@@ -54,10 +53,10 @@ namespace eral.SBPWave.Test.Test1 {
 			TestUtility.CallAllStyles(CreateAssetBundles);
 		}
 
-		private const string kAssetsBasePath = "Assets/SBPWaveTests/Test1";
-		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/Test1";
-		private readonly string[] kAssetNames = new[]{"Test1Top", "Test1Value"};
-		private readonly string[] kAssetBundleNames = new[]{"assetbundle", "assetbundle2"};
+		private const string kAssetsBasePath = "Assets/SBPWaveTests/Test1/Runtime/ScriptableObjects";
+		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/ScriptableObjects_";
+		private readonly string[] kAssetNames = new[]{"Top", "Value"};
+		private readonly string[] kAssetBundleNames = new[]{"scriptableobjects_top", "scriptableobjects_value"};
 		private readonly string[] kAssetBundleVariants = new[]{"int10001", "int10002"};
 		private readonly int[] kAssetBundleVariantValues = new[]{10001, 10002};
 
@@ -69,7 +68,7 @@ namespace eral.SBPWave.Test.Test1 {
 					assetBundleName=kAssetBundleNames[0],
 					assetBundleVariant=null,
 					assetNames=new[]{
-						$"{kAssetsBasePath}/ScriptableObjects/{kAssetNames[0]}.asset"
+						$"{kAssetsBasePath}/{kAssetNames[0]}.asset"
 					},
 					addressableNames=null
 				},
@@ -77,7 +76,7 @@ namespace eral.SBPWave.Test.Test1 {
 					assetBundleName=kAssetBundleNames[1],
 					assetBundleVariant=kAssetBundleVariants[0],
 					assetNames=new[]{
-						$"{kAssetsBasePath}/ScriptableObjects/{kAssetBundleVariants[0]}/{kAssetNames[1]}.asset"
+						$"{kAssetsBasePath}/{kAssetBundleVariants[0]}/{kAssetNames[1]}.asset"
 					},
 					addressableNames=null
 				},
@@ -85,7 +84,7 @@ namespace eral.SBPWave.Test.Test1 {
 					assetBundleName=kAssetBundleNames[1],
 					assetBundleVariant=kAssetBundleVariants[1],
 					assetNames=new[]{
-						$"{kAssetsBasePath}/ScriptableObjects/{kAssetBundleVariants[1]}/{kAssetNames[1]}.asset"
+						$"{kAssetsBasePath}/{kAssetBundleVariants[1]}/{kAssetNames[1]}.asset"
 					},
 					addressableNames=null
 				},
@@ -131,9 +130,9 @@ namespace eral.SBPWave.Test.Test1 {
 				var abcReq = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleNames[1]}.{kAssetBundleVariants[i]}");
 				while (!abcReq.isDone) yield return null;
 				var ab = abcReq.assetBundle;
-				var abReq = ab.LoadAssetAsync<Test1IntValue>(kAssetNames[1]);
+				var abReq = ab.LoadAssetAsync<ScriptableObjectsIntValue>(kAssetNames[1]);
 				while (!abReq.isDone) yield return null;
-				var asset = (Test1IntValue)abReq.asset;
+				var asset = (ScriptableObjectsIntValue)abReq.asset;
 				{
 					Assert.AreEqual(kAssetNames[1], asset.name);
 					Assert.AreEqual(kAssetBundleVariantValues[i], asset.Value);
@@ -142,7 +141,7 @@ namespace eral.SBPWave.Test.Test1 {
 			}
 		}
 
-		private IEnumerator LoadAndTest(TestUtility.Style style, string variant, Action<Test1IntValue, AssetBundle> test) {
+		private IEnumerator LoadAndTest(TestUtility.Style style, string variant, System.Action<ScriptableObjectsIntValue, AssetBundle> test) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
 			var abcReq = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleNames[0]}");
 			AssetBundleCreateRequest abcReq2 = null;
@@ -153,9 +152,9 @@ namespace eral.SBPWave.Test.Test1 {
 			while (!abcReq.isDone) yield return null;
 			var ab2 = abcReq2?.assetBundle;
 			var ab = abcReq.assetBundle;
-			var abReq = ab.LoadAssetAsync<Test1Top>(kAssetNames[0]);
+			var abReq = ab.LoadAssetAsync<ScriptableObjectsTop>(kAssetNames[0]);
 			while (!abReq.isDone) yield return null;
-			var asset = (Test1Top)abReq.asset;
+			var asset = (ScriptableObjectsTop)abReq.asset;
 			{
 				Assert.AreEqual(kAssetNames[0], asset.name);
 				test(asset.Value, ab2);
