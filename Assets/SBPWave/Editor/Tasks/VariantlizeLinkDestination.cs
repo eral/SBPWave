@@ -21,10 +21,9 @@ namespace eral.SBPWave.Tasks {
 #pragma warning restore 649
 
 		public ReturnCode Run() {
-			var buildReferenceMapUtility = new BuildReferenceMapUtility();
 			for (var i = 0; i < m_WriteData.WriteOperations.Count; i++) {
 				if (m_WriteData.WriteOperations[i] is AssetBundleWriteOperation abwo) {
-					m_WriteData.WriteOperations[i] = new VariantAssetBundleWriteOperation(abwo, m_VariantMap, buildReferenceMapUtility);
+					m_WriteData.WriteOperations[i] = new VariantAssetBundleWriteOperation(abwo, m_VariantMap);
 				}
 			}
 

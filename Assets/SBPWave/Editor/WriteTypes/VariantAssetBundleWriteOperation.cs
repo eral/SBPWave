@@ -42,15 +42,15 @@ namespace eral.SBPWave.WriteTypes {
 
 			{
 				var isChange = false;
-				m_BuildReferenceMapUtility.LoadFrom(m_AssetBundleWriteOperation.ReferenceMap);
-				foreach (var obj in m_BuildReferenceMapUtility.Objects) {
+				var buildReferenceMap = BuildReferenceMapUtility.LoadFrom(m_AssetBundleWriteOperation.ReferenceMap);
+				foreach (var obj in buildReferenceMap.Objects) {
 					if (linkerNames.TryGetValue(obj.internalFileName, out var linkerName)) {
 						obj.internalFileName = linkerName;
 						isChange = true;
 					}
 				}
 				if (isChange) {
-					m_BuildReferenceMapUtility.SaveTo(m_AssetBundleWriteOperation.ReferenceMap);
+					buildReferenceMap.SaveTo(m_AssetBundleWriteOperation.ReferenceMap);
 				}
 			}
 
@@ -80,15 +80,13 @@ namespace eral.SBPWave.WriteTypes {
 			return result;
 		}
 
-		public VariantAssetBundleWriteOperation(AssetBundleWriteOperation assetBundleWriteOperation, IBuildVariantMap BuildVariantMap, BuildReferenceMapUtility buildReferenceMapUtility) {
+		public VariantAssetBundleWriteOperation(AssetBundleWriteOperation assetBundleWriteOperation, IBuildVariantMap BuildVariantMap) {
 			m_AssetBundleWriteOperation = assetBundleWriteOperation;
 			m_BuildVariantMap = BuildVariantMap;
-			m_BuildReferenceMapUtility = buildReferenceMapUtility;
 		}
 
 		private AssetBundleWriteOperation m_AssetBundleWriteOperation;
 		private IBuildVariantMap m_BuildVariantMap;
-		private BuildReferenceMapUtility m_BuildReferenceMapUtility;
 	}
 
 }

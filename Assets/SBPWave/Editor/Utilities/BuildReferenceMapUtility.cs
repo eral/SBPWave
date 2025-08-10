@@ -4,8 +4,7 @@ using UnityEditor.Build.Content;
 using UnityEngine;
 
 namespace eral.SBPWave.Utilities {
-
-	public class BuildReferenceMapUtility {
+	public struct BuildReferenceMapHandle {
 		[System.Serializable]
 		public struct ObjectIdentifierJson {
 			public string guid;
@@ -20,39 +19,33 @@ namespace eral.SBPWave.Utilities {
 			public ObjectIdentifierJson objectId;
 		}
 
-		public List<ReferenceMapObject> Objects {get;private set;}
+		public List<ReferenceMapObject> Objects {get;internal set;}
+	}
 
-		public void LoadFrom(BuildReferenceMap refMap) {
-			var refMapJson = s_BuildReferenceMapSerializeToJson(refMap);
+	public static class BuildReferenceMapUtility {
+		public static BuildReferenceMapHandle LoadFrom(BuildReferenceMap buildReferenceMap) {
+			var refMapJson = s_BuildReferenceMapSerializeToJson(buildReferenceMap);
 			var jsonReferenceMap = JsonUtility.FromJson<JsonReferenceMap>(refMapJson);
-			var objectsEnumerable = jsonReferenceMap.m_ObjectMap.Select(x=>new ReferenceMapObject{internalFileName = jsonReferenceMap.m_Paths[x.second.serializedFileIndex]
-																								, serializationIndex = x.second.localIdentifierInFile
-																								, objectId = x.first
-																								}
-																);
-			if (Objects == null) {
-				Objects = objectsEnumerable.ToList();
-			} else {
-				Objects.Clear();
-				Objects.AddRange(objectsEnumerable);
-			}
+			var objects = jsonReferenceMap.m_ObjectMap.Select(x=>new BuildReferenceMapHandle.ReferenceMapObject{internalFileName = jsonReferenceMap.m_Paths[x.second.serializedFileIndex]
+																												, serializationIndex = x.second.localIdentifierInFile
+																												, objectId = x.first
+																												}
+															).ToList();
+			return new BuildReferenceMapHandle{Objects = objects};
 		}
 
-		public void SaveTo(BuildReferenceMap refMap) {
+		public static void SaveTo(this BuildReferenceMapHandle handle, BuildReferenceMap buildReferenceMap) {
+			var objects = handle.Objects;
 			var jsonReferenceMap = new JsonReferenceMap();
-			jsonReferenceMap.m_Paths = Objects.Select(x=>x.internalFileName).Distinct().OrderBy(x=>x).ToList();
+			jsonReferenceMap.m_Paths = objects.Select(x=>x.internalFileName).Distinct().OrderBy(x=>x).ToList();
 			var indexDict = jsonReferenceMap.m_Paths.Select((x,i)=>new{value=x, index=i}).ToDictionary(x=>x.value, x=>x.index);
-			jsonReferenceMap.m_ObjectMap = Objects.Select(x=>new JsonReferenceMap.ObjectMap{first=x.objectId
+			jsonReferenceMap.m_ObjectMap = objects.Select(x=>new JsonReferenceMap.ObjectMap{first=x.objectId
 																							, second=new JsonReferenceMap.Location{serializedFileIndex=indexDict[x.internalFileName]
 																																, localIdentifierInFile=x.serializationIndex
 																																}
 																							}).ToList();
 			var json = JsonUtility.ToJson(jsonReferenceMap);
-			s_BuildReferenceMapDeserializeFromJson(refMap, json);
-		}
-
-		public void Clear() {
-			Objects = null;
+			s_BuildReferenceMapDeserializeFromJson(buildReferenceMap, json);
 		}
 
 		static BuildReferenceMapUtility() {
@@ -71,7 +64,7 @@ namespace eral.SBPWave.Utilities {
 			}
 			[System.Serializable]
 			public struct ObjectMap {
-				public ObjectIdentifierJson first;
+				public BuildReferenceMapHandle.ObjectIdentifierJson first;
 				public Location second;
 			}
 			public List<ObjectMap> m_ObjectMap;
