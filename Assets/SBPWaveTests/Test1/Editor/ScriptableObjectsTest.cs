@@ -90,7 +90,7 @@ namespace eral.SBPWave.Test.Test1 {
 					addressableNames=null
 				},
 			};
-			var assetBundleOptions = BuildAssetBundleOptions.AssetBundleStripUnityVersion | BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension
+			var assetBundleOptions = BuildAssetBundleOptions.AssetBundleStripUnityVersion | BuildAssetBundleOptions.ForceRebuildAssetBundle | BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension
 #if UNITY_2022_1_OR_NEWER
 			                       | BuildAssetBundleOptions.StripUnatlasedSpriteCopies
 #endif
