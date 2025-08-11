@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d73b4bddf9d0fbf45a3e46ae8e33d68d, type: 3}
+  m_Name: Value
+  m_EditorClassIdentifier: SBPWaveTests.Test1::eral.SBPWave.Test.Test1.TexturesValue
+  m_Values:
+  - {fileID: 2800000, guid: 3768227cbb0c61440ad3897c51ccbd03, type: 3}
