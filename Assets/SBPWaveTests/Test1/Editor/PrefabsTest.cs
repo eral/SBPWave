@@ -1,6 +1,7 @@
 using eral.SBPWave.Test.Internal.Editor;
 using NUnit.Framework;
 using System.Collections;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -51,6 +52,11 @@ namespace eral.SBPWave.Test.Test1 {
 		[OneTimeSetUp]
 		public void OneTimeSetUp() {
 			TestUtility.CallAllStyles(CreateAssetBundles);
+		}
+
+		[TearDown]
+		public void TearDown() {
+			AssetBundle.GetAllLoadedAssetBundles().ToList().ForEach(x=>x.Unload(true));
 		}
 
 		private const string kAssetsBasePath = "Assets/SBPWaveTests/Test1/Runtime/Prefabs";
