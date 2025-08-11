@@ -18,9 +18,15 @@ namespace eral.SBPWave.Test.Internal.Editor {
 		public static void CreateFolder(string path) {
 			if (!Directory.Exists(path)) {
 				var parent = Path.GetDirectoryName(path);
+#if UNITY_EDITOR_WIN
+				parent = parent.Replace("\\", "/");
+#endif
 				CreateFolder(parent);
 				var crnt = Path.GetFileName(path);
-				AssetDatabase.CreateFolder(parent, crnt);
+				var guid = AssetDatabase.CreateFolder(parent, crnt);
+				if (string.IsNullOrEmpty(guid)) {
+					Directory.CreateDirectory(path);
+				}
 			}
 		}
 
