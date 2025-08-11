@@ -1,4 +1,6 @@
 using eral.SBPWave.Interfaces;
+using System.IO;
+using UnityEditor;
 using UnityEditor.Build.Content;
 using UnityEditor.Build.Pipeline;
 using UnityEditor.Build.Pipeline.Interfaces;
@@ -37,6 +39,13 @@ namespace eral.SBPWave {
 					//(プレファブ内の)MonoBehaviourやTransformなら
 					//通常ID算出を使う
 					//empty.
+				} else if (objectObj is Texture) {
+					//テクスチャは拡張子違いで同名ファイルがある場合があるので、全てをバリアント用IDにすると衝突する
+					//その為ID算出には拡張子も考慮する
+					var addressableName = m_BundleBuildContent.Addresses[objectID.guid];
+					var assetPath = AssetDatabase.GUIDToAssetPath(objectID.guid);
+					var assetExtWithoutDot = Path.GetExtension(assetPath).Substring(1);
+					hashSource = $"{addressableName}:{assetExtWithoutDot}";
 				} else {
 					//それ以外なら
 					var addressableName = m_BundleBuildContent.Addresses[objectID.guid];
