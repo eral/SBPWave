@@ -7,13 +7,13 @@ using UnityEngine.Build.Pipeline;
 namespace eral.SBPWave.Test.Internal.Editor {
 
 	public class TestUtility {
-		public static BuildAssetBundleOptions buildAssetBundleOptions => BuildAssetBundleOptions.AssetBundleStripUnityVersion
-		                                                               | BuildAssetBundleOptions.ChunkBasedCompression
-		                                                               | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension
+		public const BuildAssetBundleOptions buildAssetBundleOptions = BuildAssetBundleOptions.AssetBundleStripUnityVersion
+		                                                             | BuildAssetBundleOptions.ChunkBasedCompression
+		                                                             | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension
 #if UNITY_2022_1_OR_NEWER
-		                                                               | BuildAssetBundleOptions.StripUnatlasedSpriteCopies
+		                                                             | BuildAssetBundleOptions.StripUnatlasedSpriteCopies
 #endif
-		                                                               | BuildAssetBundleOptions.ForceRebuildAssetBundle;
+		                                                             | BuildAssetBundleOptions.ForceRebuildAssetBundle;
 
 		public static void CreateFolder(string path) {
 			if (!Directory.Exists(path)) {
