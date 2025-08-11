@@ -3,6 +3,7 @@ using UnityEditor.Build.Content;
 using UnityEditor.Build.Pipeline;
 using UnityEditor.Build.Pipeline.Interfaces;
 using UnityEditor.Build.Pipeline.Utilities;
+using UnityEngine;
 
 namespace eral.SBPWave {
 
@@ -15,12 +16,36 @@ namespace eral.SBPWave {
 		}
 
 		public virtual long SerializationIndexFromObjectIdentifier(ObjectIdentifier objectID) {
-			long result;
+			var hashSource = default(object);
 			if ((m_BuildVariantMap != null) && m_BuildVariantMap.BundleLayoutInverse.ContainsKey(objectID.guid)) {
 				//バリアント対象のアセットバンドルなら
 				//バリアント用のID算出を行う
-				var addressableName = m_BundleBuildContent.Addresses[objectID.guid];
-				var hash = HashingMethods.Calculate(addressableName);
+				var objectObj = ObjectIdentifier.ToObject(objectID);
+				if (objectObj is GameObject objectGo) {
+					//プレファブは内部にある全Objectが個別に入ってくるので、全てをバリアント用IDにすると衝突する
+					//その為プレファブの場合はルートのGameObject以外はバリアント用のID算出を行わないようにする
+					if (!objectGo.transform.parent) {//Missingであっても親が居るかを見るので「==null」にはしないこと
+						//GameObjectでルートなら
+						var addressableName = m_BundleBuildContent.Addresses[objectID.guid];
+						hashSource = addressableName;
+					} else {
+						//GameObjectでルート以外なら
+						//通常ID算出を使う
+						//empty.
+					}
+				} else if (objectObj is Component) {
+					//(プレファブ内の)MonoBehaviourやTransformなら
+					//通常ID算出を使う
+					//empty.
+				} else {
+					//それ以外なら
+					var addressableName = m_BundleBuildContent.Addresses[objectID.guid];
+					hashSource = addressableName;
+				}
+			}
+			long result;
+			if (hashSource != null) {
+				var hash = HashingMethods.Calculate(hashSource);
 				result = System.BitConverter.ToInt64(hash.ToBytes(), 0);
 			} else {
 				result = m_DeterministicIdentifiers.SerializationIndexFromObjectIdentifier(objectID);
