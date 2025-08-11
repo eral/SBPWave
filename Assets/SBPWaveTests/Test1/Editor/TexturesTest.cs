@@ -1,8 +1,8 @@
 using eral.SBPWave.Test.Internal.Editor;
 using NUnit.Framework;
 using System.Collections;
+using System.Linq;
 using UnityEditor;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -30,13 +30,13 @@ namespace eral.SBPWave.Test.Test1 {
 		}
 
 		[UnityTest]
-		public IEnumerator LoadAssetDirectFromVariant() {
-			yield return TestLoadAssetDirectFromVariant(TestUtility.Style.SBPWave);
+		public IEnumerator LoadShare() {
+			yield return TestShare(TestUtility.Style.SBPWave);
 		}
 
 		[UnityTest]
-		public IEnumerator LoadShareAsset() {
-			yield return TestLoadShareAsset(TestUtility.Style.SBPWave);
+		public IEnumerator LoadAssetDirectFromVariant() {
+			yield return TestLoadAssetDirectFromVariant(TestUtility.Style.SBPWave);
 		}
 
 		[UnityTest]
@@ -60,13 +60,13 @@ namespace eral.SBPWave.Test.Test1 {
 		}
 
 		[UnityTest]
-		public IEnumerator LoadAssetDirectFromVariantBuiltin() {
-			yield return TestLoadAssetDirectFromVariant(TestUtility.Style.Builtin);
+		public IEnumerator LoadShareBuiltin() {
+			yield return TestShare(TestUtility.Style.Builtin);
 		}
 
 		[UnityTest]
-		public IEnumerator LoadShareAssetBuiltin() {
-			yield return TestLoadShareAsset(TestUtility.Style.Builtin);
+		public IEnumerator LoadAssetDirectFromVariantBuiltin() {
+			yield return TestLoadAssetDirectFromVariant(TestUtility.Style.Builtin);
 		}
 
 		[OneTimeSetUp]
@@ -74,12 +74,21 @@ namespace eral.SBPWave.Test.Test1 {
 			TestUtility.CallAllStyles(CreateAssetBundles);
 		}
 
+		[TearDown]
+		public void TearDown() {
+			AssetBundle.GetAllLoadedAssetBundles().ToList().ForEach(x=>x.Unload(true));
+		}
+
 		private const string kAssetsBasePath = "Assets/SBPWaveTests/Test1/Runtime/Textures";
 		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/Textures_";
-		private readonly string[] kAssetNames = new[]{"Top", "Value", "Share"};
-		private readonly string[] kAssetBundleNames = new[]{"textures_top", "textures_value", "textures_share"};
-		private readonly string[] kAssetBundleVariants = new[]{"tex_red", "tex_green", "tex_jpeg"};
-		private readonly Color32[] kAssetBundleVariantPixels = new[]{new Color32(0xFF, 0x00, 0x00, 0xFF), new Color32(0x00, 0xFF, 0x00, 0xFF), new Color32(0xFF, 0x00, 0xFF, 0xFF)};
+		private readonly string[] kAssetNames = new[]{"Top", "Tex"};
+		private readonly string[] kAssetBundleNames = new[]{"textures_top", "textures_value"};
+		private readonly string[] kAssetBundleVariants = new[]{"tex_red", "tex_green", "tex_jpeg", "tex_share"};
+		private readonly Color32[][] kAssetBundleVariantPixels = new[]{new[]{new Color32(0xFF, 0x00, 0x00, 0xFF)}
+		                                                             , new[]{new Color32(0x00, 0xFF, 0x00, 0xFF)}
+		                                                             , new[]{new Color32(0xFF, 0x00, 0xFF, 0xFF)}
+		                                                             , new[]{new Color32(0x00, 0x00, 0xFF, 0xFF),new Color32(0x00, 0xFF, 0xFF, 0xFF)}
+		                                                             };
 		
 		private void CreateAssetBundles(TestUtility.Style style) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
@@ -97,7 +106,7 @@ namespace eral.SBPWave.Test.Test1 {
 					assetBundleName=kAssetBundleNames[1],
 					assetBundleVariant=kAssetBundleVariants[0],
 					assetNames=new[]{
-						$"{kAssetsBasePath}/{kAssetBundleVariants[0]}/{kAssetNames[1]}.asset"
+						$"{kAssetsBasePath}/{kAssetBundleVariants[0]}/{kAssetNames[1]}.png"
 					},
 					addressableNames=null
 				},
@@ -105,7 +114,7 @@ namespace eral.SBPWave.Test.Test1 {
 					assetBundleName=kAssetBundleNames[1],
 					assetBundleVariant=kAssetBundleVariants[1],
 					assetNames=new[]{
-						$"{kAssetsBasePath}/{kAssetBundleVariants[1]}/{kAssetNames[1]}.asset"
+						$"{kAssetsBasePath}/{kAssetBundleVariants[1]}/{kAssetNames[1]}.png"
 					},
 					addressableNames=null
 				},
@@ -113,16 +122,16 @@ namespace eral.SBPWave.Test.Test1 {
 					assetBundleName=kAssetBundleNames[1],
 					assetBundleVariant=kAssetBundleVariants[2],
 					assetNames=new[]{
-						$"{kAssetsBasePath}/{kAssetBundleVariants[2]}/{kAssetNames[1]}.asset"
+						$"{kAssetsBasePath}/{kAssetBundleVariants[2]}/{kAssetNames[1]}.jpg"
 					},
 					addressableNames=null
 				},
 				new AssetBundleBuild{
-					assetBundleName=kAssetBundleNames[2],
-					assetBundleVariant="share",
+					assetBundleName=kAssetBundleNames[1],
+					assetBundleVariant=kAssetBundleVariants[3],
 					assetNames=new[]{
-						$"{kAssetsBasePath}/Assets/blue.png",
-						$"{kAssetsBasePath}/Assets/blue.jpg"
+						$"{kAssetsBasePath}/{kAssetBundleVariants[3]}/{kAssetNames[1]}.png",
+						$"{kAssetsBasePath}/{kAssetBundleVariants[3]}/{kAssetNames[1]}.jpg"
 					},
 					addressableNames=null
 				},
@@ -133,9 +142,9 @@ namespace eral.SBPWave.Test.Test1 {
 		private IEnumerator TestNormal(TestUtility.Style style) {
 			yield return LoadAndTest(style, kAssetBundleVariants[0], (tex, ab)=>{
 				Assert.True(tex != null);
-				var pixels = tex.Value.GetPixels32();
+				var pixels = tex.GetPixels32();
 				var pixel = pixels[pixels.Length / 2];
-				Assert.AreEqual(kAssetBundleVariantPixels[0], pixel);
+				Assert.AreEqual(kAssetBundleVariantPixels[0][0], pixel);
 				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[0]}", ab.name);
 			});
 		}
@@ -143,28 +152,36 @@ namespace eral.SBPWave.Test.Test1 {
 		private IEnumerator TestVariant(TestUtility.Style style) {
 			yield return LoadAndTest(style, kAssetBundleVariants[1], (tex, ab)=>{
 				Assert.True(tex != null);
-				var pixels = tex.Value.GetPixels32();
+				var pixels = tex.GetPixels32();
 				var pixel = pixels[pixels.Length / 2];
-				Assert.AreEqual(kAssetBundleVariantPixels[1], pixel);
+				Assert.AreEqual(kAssetBundleVariantPixels[1][0], pixel);
 				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[1]}", ab.name);
+			});
+		}
+
+		private IEnumerator TestNoLoad(TestUtility.Style style) {
+			yield return LoadAndTest(style, null, (tex, ab)=>{
+				Assert.True(tex == null);
+				Assert.AreNotEqual(null, tex);
+				Assert.AreEqual(null, ab);
 			});
 		}
 
 		private IEnumerator TestDifferentExtension(TestUtility.Style style) {
 			yield return LoadAndTest(style, kAssetBundleVariants[2], (tex, ab)=>{
-				Assert.True(tex != null);
-				var pixels = tex.Value.GetPixels32();
-				var pixel = pixels[pixels.Length / 2];
-				Assert.AreEqual(kAssetBundleVariantPixels[2], pixel);
-				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[2]}", ab.name);
+				Assert.True(tex == null);
+				Assert.AreNotEqual(null, tex);
+				Assert.AreNotEqual(null, ab);
 			});
 		}
 
-		private IEnumerator TestNoLoad(TestUtility.Style style) {
-			yield return LoadAndTest(style, null, (script, ab)=>{
-				Assert.True(script == null);
-				Assert.AreNotEqual(null, script);
-				Assert.AreEqual(null, ab);
+		public IEnumerator TestShare(TestUtility.Style style) {
+			yield return LoadAndTest(style, kAssetBundleVariants[3], (tex, ab)=>{
+				Assert.True(tex != null);
+				var pixels = tex.GetPixels32();
+				var pixel = pixels[pixels.Length / 2];
+				Assert.AreEqual(kAssetBundleVariantPixels[3][0], pixel);
+				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[3]}", ab.name);
 			});
 		}
 
@@ -174,47 +191,20 @@ namespace eral.SBPWave.Test.Test1 {
 				var abcReq = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleNames[1]}.{kAssetBundleVariants[i]}");
 				while (!abcReq.isDone) yield return null;
 				var ab = abcReq.assetBundle;
-				var abReq = ab.LoadAssetAsync<TexturesValue>(kAssetNames[1]);
+				var abReq = ab.LoadAssetAsync<Texture2D>(kAssetNames[1]);
 				while (!abReq.isDone) yield return null;
-				var asset = (TexturesValue)abReq.asset;
+				var tex = (Texture2D)abReq.asset;
 				{
-					Assert.AreEqual(kAssetNames[1], asset.name);
-					var pixels = asset.Value.GetPixels32();
+					Assert.AreEqual(kAssetNames[1], tex.name);
+					var pixels = tex.GetPixels32();
 					var pixel = pixels[pixels.Length / 2];
-					Assert.AreEqual(kAssetBundleVariantPixels[i], pixel);
+					Assert.That(kAssetBundleVariantPixels[i].Contains(pixel));
 				}
 				ab.Unload(true);
 			}
 		}
 
-		public IEnumerator TestLoadShareAsset(TestUtility.Style style) {
-			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
-			var abcReq = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleNames[2]}.share");
-			while (!abcReq.isDone) yield return null;
-			var ab = abcReq.assetBundle;
-			var abReq = ab.LoadAllAssetsAsync<Texture2D>();
-			while (!abReq.isDone) yield return null;
-			var allAssets = abReq.allAssets;
-			{
-				Assert.AreEqual(2, allAssets.Length);
-				foreach (Texture2D asset in allAssets) {
-					Assert.AreEqual("blue", asset.name);
-					var pixels = asset.GetPixels32();
-					var pixel = pixels[pixels.Length / 2];
-					
-					if (Color32.Equals(new Color32(0x00, 0x00, 0xFF, 0xFF), pixel)) {
-						//empty.
-					}  else if (Color32.Equals(new Color32(0x00, 0xFF, 0xFF, 0xFF), pixel)) {
-						//empty.
-					} else {
-						Assert.Fail();
-					}
-				}
-			}
-			ab.Unload(true);
-		}
-
-		private IEnumerator LoadAndTest(TestUtility.Style style, string variant, System.Action<TexturesValue, AssetBundle> test) {
+		private IEnumerator LoadAndTest(TestUtility.Style style, string variant, System.Action<Texture2D, AssetBundle> test) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
 			var abcReq = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleNames[0]}");
 			AssetBundleCreateRequest abcReq2 = null;

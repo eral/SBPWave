@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e09e762db4bdb4d8eefef68b928510, type: 3}
   m_Name: Top
   m_EditorClassIdentifier: SBPWaveTests.Test1::eral.SBPWave.Test.Test1.TexturesTop
-  m_Value: {fileID: 11400000, guid: e6359fbf1d5dbd642b522835e471f118, type: 2}
+  m_Value: {fileID: 2800000, guid: 432cb0260cecee54c83385c90bace3fd, type: 3}
