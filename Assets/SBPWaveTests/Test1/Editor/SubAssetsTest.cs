@@ -11,47 +11,58 @@ namespace eral.SBPWave.Test.Test1 {
 	public class SubAssetsTest {
 		[UnityTest]
 		public IEnumerator LoadNormal() {
+			CreateAssetBundles(TestUtility.Style.SBPWave);
 			yield return TestNormal(TestUtility.Style.SBPWave);
 		}
 
 		[UnityTest]
 		public IEnumerator LoadVariant() {
+			CreateAssetBundles(TestUtility.Style.SBPWave);
 			yield return TestVariant(TestUtility.Style.SBPWave);
 		}
 
 		[UnityTest]
 		public IEnumerator NoLoad() {
+			CreateAssetBundles(TestUtility.Style.SBPWave);
 			yield return TestNoLoad(TestUtility.Style.SBPWave);
 		}
 
 		[UnityTest]
 		public IEnumerator LoadAssetDirectFromVariant() {
+			CreateAssetBundles(TestUtility.Style.SBPWave);
 			yield return TestLoadAssetDirectFromVariant(TestUtility.Style.SBPWave);
 		}
 
 		[UnityTest]
 		public IEnumerator LoadNormalBuiltin() {
+			CreateAssetBundles(TestUtility.Style.Builtin);
 			yield return TestNormal(TestUtility.Style.Builtin);
 		}
 
 		[UnityTest]
 		public IEnumerator LoadVariantBuiltin() {
+			CreateAssetBundles(TestUtility.Style.Builtin);
 			yield return TestVariant(TestUtility.Style.Builtin);
 		}
 
 		[UnityTest]
 		public IEnumerator NoLoadBuiltin() {
+			CreateAssetBundles(TestUtility.Style.Builtin);
 			yield return TestNoLoad(TestUtility.Style.Builtin);
 		}
 
 		[UnityTest]
 		public IEnumerator LoadAssetDirectFromVariantBuiltin() {
+			CreateAssetBundles(TestUtility.Style.Builtin);
 			yield return TestLoadAssetDirectFromVariant(TestUtility.Style.Builtin);
 		}
 
 		[OneTimeSetUp]
 		public void OneTimeSetUp() {
-			TestUtility.CallAllStyles(CreateAssetBundles);
+			TestUtility.CallAllStyles(x=>{
+				var assetBundlesPath = TestUtility.AddStyleStringToEnd(x, kAssetBundlesPath);
+				TestUtility.ClearFolder(assetBundlesPath);
+			});
 		}
 
 		[TearDown]
