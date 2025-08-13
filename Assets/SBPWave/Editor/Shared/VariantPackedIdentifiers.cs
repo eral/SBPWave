@@ -39,12 +39,6 @@ namespace eral.SBPWave {
 					//(プレファブ内の)MonoBehaviourやTransformなら
 					//通常ID算出を使う
 					//empty.
-				} else if (objectObj is Sprite objectSprite) {
-					//スプライトは全Spriteが個別に入ってくるので、全てをバリアント用IDにすると衝突する
-					//その為ID算出にはスプライト名も考慮する
-					var addressableName = m_BundleBuildContent.Addresses[objectID.guid];
-					var spriteName = objectSprite.name;
-					hashSource = $"{addressableName}:{spriteName}";
 				} else if (objectObj is Texture) {
 					//テクスチャは拡張子違いで同名ファイルがある場合があるので、全てをバリアント用IDにすると衝突する
 					//その為ID算出には拡張子も考慮する
@@ -54,8 +48,13 @@ namespace eral.SBPWave {
 					hashSource = $"{addressableName}:{assetExtWithoutDot}";
 				} else {
 					//それ以外なら
+					//サブアセット持ちの場合はサブアセットも個別に入ってくるので、サブアセット名も考慮してバリアント用IDにしないと衝突する
 					var addressableName = m_BundleBuildContent.Addresses[objectID.guid];
-					hashSource = addressableName;
+					if (AssetDatabase.IsSubAsset(objectObj)) {
+						hashSource = $"{addressableName}:{objectObj.name}";
+					} else {
+						hashSource = addressableName;
+					}
 				}
 			}
 			long result;
