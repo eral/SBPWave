@@ -13,32 +13,46 @@ namespace eral.SBPWave.Test.Test1 {
 	public class SameNameTest {
 		[UnityTest]
 		public IEnumerator DifferentClassScript() {
-			yield return Test(TestUtility.Style.SBPWave, Pattern.DifferentClassScript);
+			CreateAssetBundles(TestUtility.Style.SBPWave, Pattern.DifferentClassScript);
+			return Load(TestUtility.Style.SBPWave);
 		}
 
 		[UnityTest]
 		public IEnumerator DifferentNamespaceScript() {
-			yield return Test(TestUtility.Style.SBPWave, Pattern.DifferentNamespaceScript);
+			CreateAssetBundles(TestUtility.Style.SBPWave, Pattern.DifferentNamespaceScript);
+			return Load(TestUtility.Style.SBPWave);
 		}
 
 		[UnityTest]
 		public IEnumerator ScriptAndPrefab() {
-			yield return Test(TestUtility.Style.SBPWave, Pattern.ScriptAndPrefab);
+			CreateAssetBundles(TestUtility.Style.SBPWave, Pattern.ScriptAndPrefab);
+			return Load(TestUtility.Style.SBPWave);
 		}
 
 		[UnityTest]
 		public IEnumerator DifferentClassScriptBuiltin() {
-			yield return Test(TestUtility.Style.Builtin, Pattern.DifferentClassScript);
+			CreateAssetBundles(TestUtility.Style.Builtin, Pattern.DifferentClassScript);
+			return Load(TestUtility.Style.Builtin);
 		}
 
 		[UnityTest]
 		public IEnumerator DifferentNamespaceScriptBuiltin() {
-			yield return Test(TestUtility.Style.Builtin, Pattern.DifferentNamespaceScript);
+			CreateAssetBundles(TestUtility.Style.Builtin, Pattern.DifferentNamespaceScript);
+			return Load(TestUtility.Style.Builtin);
 		}
 
 		[UnityTest]
 		public IEnumerator ScriptAndPrefabBuiltin() {
-			yield return Test(TestUtility.Style.Builtin, Pattern.ScriptAndPrefab);
+			CreateAssetBundles(TestUtility.Style.Builtin, Pattern.ScriptAndPrefab);
+			return Load(TestUtility.Style.Builtin);
+		}
+
+		[OneTimeSetUp]
+		public void OneTimeSetUp() {
+			TestUtility.CallAllStyles(x=>{
+				var assetBundlesPath = TestUtility.AddStyleStringToEnd(x, kAssetBundlesPath);
+				TestUtility.ClearFolder(assetBundlesPath);
+			});
 		}
 
 		[TearDown]
@@ -57,11 +71,6 @@ namespace eral.SBPWave.Test.Test1 {
 		private readonly int[][] kAssetPickupIndices = new[]{new[]{0, 1}, new[]{0, 2}, new[]{0, 3}};
 		private readonly string kAssetBundleName = "samename";
 		private readonly string kAssetBundleVariant = "variant";
-
-		private IEnumerator Test(TestUtility.Style style, Pattern pattern) {
-			CreateAssetBundles(style, pattern);
-			return Load(style);
-		}
 
 		private void CreateAssetBundles(TestUtility.Style style, Pattern pattern) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
