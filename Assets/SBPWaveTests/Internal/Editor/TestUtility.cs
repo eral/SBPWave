@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -7,13 +8,12 @@ using UnityEngine.Build.Pipeline;
 namespace eral.SBPWave.Test.Internal.Editor {
 
 	public class TestUtility {
-		public const BuildAssetBundleOptions buildAssetBundleOptions = BuildAssetBundleOptions.AssetBundleStripUnityVersion
-		                                                             | BuildAssetBundleOptions.ChunkBasedCompression
+		public const BuildAssetBundleOptions buildAssetBundleOptions = BuildAssetBundleOptions.ChunkBasedCompression
 		                                                             | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension
 #if UNITY_2022_1_OR_NEWER
 		                                                             | BuildAssetBundleOptions.StripUnatlasedSpriteCopies
 #endif
-		                                                             | BuildAssetBundleOptions.ForceRebuildAssetBundle;
+		                                                             | BuildAssetBundleOptions.AssetBundleStripUnityVersion;
 
 		public static void CreateFolder(string path) {
 			if (!Directory.Exists(path)) {
@@ -33,6 +33,21 @@ namespace eral.SBPWave.Test.Internal.Editor {
 		public static void CreateFolderWhenEndIsFile(string path) {
 			path = Path.GetDirectoryName(path);
 			CreateFolder(path);
+		}
+
+		public static void ClearFolder(string path) {
+			if (Directory.Exists(path)) {
+				var outFailedPaths = new List<string>();
+				var paths = AssetDatabase.FindAssets("t:Object", new[]{path}).Select(x=>AssetDatabase.GUIDToAssetPath(x)).ToArray();
+				AssetDatabase.DeleteAssets(paths, outFailedPaths);
+
+				foreach (var directory in Directory.EnumerateDirectories(path)) {
+					Directory.Delete(directory, true);
+				}
+				foreach (var file in Directory.EnumerateFiles(path)) {
+					File.Delete(file);
+				}
+			}
 		}
 
 		public enum Style {
