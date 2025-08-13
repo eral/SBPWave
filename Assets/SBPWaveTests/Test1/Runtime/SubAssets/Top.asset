@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fe5ca870fd69a04ebd3d84122662e54, type: 3}
+  m_Name: Top
+  m_EditorClassIdentifier: SBPWaveTests.Test1::eral.SBPWave.Test.Test1.SubAssetsTop
+  m_Value: {fileID: 4360542363132092670, guid: 6335247ce1a8e714fb2ef15055c1c711, type: 2}

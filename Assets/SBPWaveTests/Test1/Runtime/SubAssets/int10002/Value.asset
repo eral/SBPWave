@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-78074071105094017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b22afd71c0330db4eb38b271f2ee5ac0, type: 3}
+  m_Name: SubValue2
+  m_EditorClassIdentifier: SBPWaveTests.Test1::eral.SBPWave.Test.Test1.SubAssetsSubValue
+  m_Value: 20002
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3f118f71833608478302cdf35a4bd89, type: 3}
+  m_Name: Value
+  m_EditorClassIdentifier: SBPWaveTests.Test1::eral.SBPWave.Test.Test1.SubAssetsValue
+  m_Value: {fileID: 0}
+--- !u!114 &6910694217697223865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b22afd71c0330db4eb38b271f2ee5ac0, type: 3}
+  m_Name: SubValue
+  m_EditorClassIdentifier: SBPWaveTests.Test1::eral.SBPWave.Test.Test1.SubAssetsSubValue
+  m_Value: 10002
