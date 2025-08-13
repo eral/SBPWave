@@ -18,6 +18,27 @@ namespace eral.SBPWave {
 		}
 
 		public virtual long SerializationIndexFromObjectIdentifier(ObjectIdentifier objectID) {
+			var result = VariantSerializationIndexFromObjectIdentifier(objectID);
+			if (result == 0) {
+				result = m_DeterministicIdentifiers.SerializationIndexFromObjectIdentifier(objectID);
+			}
+			return result;
+		}
+
+		public virtual string GenerateLinkerFileName(string name) {
+			var dotIndex = name.IndexOf('.');
+			if (0 <= dotIndex) {
+				return GenerateInternalFileName(name.Substring(0, dotIndex));
+			} else {
+				return GenerateInternalFileName(name);
+			}
+		}
+
+		public VariantPackedIdentifiers(IDeterministicIdentifiers deterministicIdentifiers = null) {
+			m_DeterministicIdentifiers = deterministicIdentifiers ?? new PrefabPackedIdentifiers();
+		}
+
+		protected long VariantSerializationIndexFromObjectIdentifier(ObjectIdentifier objectID) {
 			var hashSource = default(object);
 			if ((m_BuildVariantMap != null) && m_BuildVariantMap.BundleLayoutInverse.ContainsKey(objectID.guid)) {
 				//バリアント対象のアセットバンドルなら
@@ -57,27 +78,12 @@ namespace eral.SBPWave {
 					}
 				}
 			}
-			long result;
 			if (hashSource != null) {
 				var hash = HashingMethods.Calculate(hashSource);
-				result = System.BitConverter.ToInt64(hash.ToBytes(), 0);
+				return System.BitConverter.ToInt64(hash.ToBytes(), 0);
 			} else {
-				result = m_DeterministicIdentifiers.SerializationIndexFromObjectIdentifier(objectID);
+				return 0;
 			}
-			return result;
-		}
-
-		public virtual string GenerateLinkerFileName(string name) {
-			var dotIndex = name.IndexOf('.');
-			if (0 <= dotIndex) {
-				return GenerateInternalFileName(name.Substring(0, dotIndex));
-			} else {
-				return GenerateInternalFileName(name);
-			}
-		}
-
-		public VariantPackedIdentifiers(IDeterministicIdentifiers deterministicIdentifiers = null) {
-			m_DeterministicIdentifiers = deterministicIdentifiers ?? new PrefabPackedIdentifiers();
 		}
 
 		private IDeterministicIdentifiers m_DeterministicIdentifiers;

@@ -26,13 +26,13 @@ namespace eral.SBPWave {
 				var contextObject = contextObjects[i];
 				if (contextObject is IDeterministicIdentifiers deterministicIdentifiers) {
 					if (contextObject is not VariantPackedIdentifiers) {
-						contextObjects[i] = new VariantPackedIdentifiers(deterministicIdentifiers);
+						contextObjects[i] = new CachedVariantPackedIdentifiers(deterministicIdentifiers);
 					}
 					return;
 				}
 			}
 			System.Array.Resize(ref contextObjects, contextObjects.Length + 1);
-			contextObjects[^1] = new VariantPackedIdentifiers();
+			contextObjects[^1] = new CachedVariantPackedIdentifiers();
 		}
 
 	}
