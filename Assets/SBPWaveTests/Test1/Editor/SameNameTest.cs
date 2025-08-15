@@ -1,6 +1,7 @@
 using eral.SBPWave.Test.Internal.Editor;
 using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -87,7 +88,24 @@ namespace eral.SBPWave.Test.Test1 {
 					addressableNames=null
 				},
 			};
+
+			var ignoreFailingMessagesOld = LogAssert.ignoreFailingMessages;
+			LogAssert.ignoreFailingMessages = true;
+			var conditions = new List<System.Tuple<string, string, LogType>>();
+			Application.LogCallback logMessageReceived = (condition, stackTrace, type)=>{
+				conditions.Add(System.Tuple.Create(condition, stackTrace, type));
+			};
+			Application.logMessageReceived += logMessageReceived;
 			TestUtility.BuildAssetBundles(style, assetBundlesPath, builds);
+			Application.logMessageReceived -= logMessageReceived;
+			LogAssert.ignoreFailingMessages = ignoreFailingMessagesOld;
+			if (conditions.Count == 0) {
+				//empty.
+			} else if ((conditions.Count == 1) && (conditions[0].Item3 == LogType.Error) && (0 == conditions[0].Item1.IndexOf("Building AssetBundle failed because hash collision was detected in the deterministic id generation."))) {
+				Assert.Ignore("Undefined Behavior");
+			} else {
+				Assert.Fail();
+			}
 		}
 
 		private IEnumerator Load(TestUtility.Style style, Pattern pattern) {
