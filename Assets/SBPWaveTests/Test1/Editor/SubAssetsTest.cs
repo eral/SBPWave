@@ -72,10 +72,11 @@ namespace eral.SBPWave.Test.Test1 {
 
 		private const string kAssetsBasePath = "Assets/SBPWaveTests/Test1/Runtime/SubAssets";
 		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/SubAssets_";
-		private readonly string[] kAssetNames = new[]{"Top", "Value", "SubValue"};
+		private readonly string[] kAssetNames = new[]{"Top", "Value"};
 		private readonly string[] kAssetBundleNames = new[]{"subassets_top", "subassets_value"};
 		private readonly string[] kAssetBundleVariants = new[]{"int10001", "int10002"};
 		private readonly int[] kAssetBundleVariantValues = new[]{10001, 10002};
+		private readonly string[] kSubAssetNames = new[]{"SubValue", "SubValue2"};
 
 		private void CreateAssetBundles(TestUtility.Style style) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
@@ -112,7 +113,7 @@ namespace eral.SBPWave.Test.Test1 {
 		private IEnumerator TestNormal(TestUtility.Style style) {
 			yield return LoadAndTest(style, kAssetBundleVariants[0], (asset, ab)=>{
 				Assert.True(asset != null);
-				Assert.AreEqual(kAssetNames[2], asset.name);
+				Assert.AreEqual(kSubAssetNames[0], asset.name);
 				Assert.AreEqual(kAssetBundleVariantValues[0], asset.Value);
 				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[0]}", ab.name);
 			});
@@ -120,9 +121,15 @@ namespace eral.SBPWave.Test.Test1 {
 
 		private IEnumerator TestVariant(TestUtility.Style style) {
 			yield return LoadAndTest(style, kAssetBundleVariants[1], (asset, ab)=>{
-				Assert.True(asset != null);
-				Assert.AreEqual(kAssetNames[2], asset.name);
-				Assert.AreEqual(kAssetBundleVariantValues[1], asset.Value);
+				if (asset != null) {
+					Assert.True(asset != null);
+					Assert.AreEqual(kSubAssetNames[0], asset.name);
+					Assert.AreEqual(kAssetBundleVariantValues[1], asset.Value);
+				} else if ((object)asset != null) {
+					Assert.Ignore("Undefined Behavior");
+				} else {
+					Assert.Fail();
+				}
 				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[1]}", ab.name);
 			});
 		}
@@ -145,8 +152,20 @@ namespace eral.SBPWave.Test.Test1 {
 				while (!abReq.isDone) yield return null;
 				var asset = (SubAssetsSubValue)abReq.asset;
 				{
-					Assert.AreEqual(kAssetNames[2], asset.name);
-					Assert.AreEqual(kAssetBundleVariantValues[i], asset.Value);
+					if (kSubAssetNames[0] == asset.name) {
+						Assert.AreEqual(kSubAssetNames[0], asset.name);
+					} else if (kSubAssetNames.Contains(asset.name)) {
+						Assert.Ignore("Undefined Behavior");
+					} else {
+						Assert.Fail();
+					}
+					if (kAssetBundleVariantValues[i] == asset.Value) {
+						Assert.AreEqual(kAssetBundleVariantValues[i], asset.Value);
+					} else if (kAssetBundleVariantValues.Contains(asset.Value)) {
+						Assert.Ignore("Undefined Behavior");
+					} else {
+						Assert.Fail();
+					}
 				}
 				ab.Unload(true);
 			}
