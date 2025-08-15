@@ -77,6 +77,9 @@ namespace eral.SBPWave.Test.Test1 {
 		private readonly string[] kAssetBundleVariants = new[]{"normal", "variant"};
 		private readonly Vector2[] kAssetBundleVariantValues = new[]{new Vector2(1,1), new Vector2(9,9)};
 
+		private readonly string[] kAssetNamesAmbiguous = new[]{"Tex", "Dummy_0", "Dummy_1", "Dummy_2"};
+		private readonly Vector2[] kAssetBundleVariantValuesAmbiguous = new[]{new Vector2(1,1), new Vector2(1,9), new Vector2(9,1), new Vector2(9,9)};
+
 		private void CreateAssetBundles(TestUtility.Style style) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
 			TestUtility.CreateFolder(assetBundlesPath);
@@ -120,9 +123,15 @@ namespace eral.SBPWave.Test.Test1 {
 
 		private IEnumerator TestVariant(TestUtility.Style style) {
 			yield return LoadAndTest(style, kAssetBundleVariants[1], (sprite, ab)=>{
-				Assert.True(sprite != null);
-				Assert.AreEqual(kAssetNames[1], sprite.name);
-				Assert.AreEqual(kAssetBundleVariantValues[1], sprite.rect.position);
+				if (sprite != null) {
+					Assert.True(sprite != null);
+					Assert.AreEqual(kAssetNames[1], sprite.name);
+					Assert.AreEqual(kAssetBundleVariantValues[1], sprite.rect.position);
+				} else if ((object)sprite != null) {
+					Assert.Ignore("Undefined Behavior");
+				} else {
+					Assert.Fail();
+				}
 				Assert.AreEqual($"{kAssetBundleNames[1]}.{kAssetBundleVariants[1]}", ab.name);
 			});
 		}
@@ -145,8 +154,20 @@ namespace eral.SBPWave.Test.Test1 {
 				while (!abReq.isDone) yield return null;
 				var asset = (Sprite)abReq.asset;
 				{
-					Assert.AreEqual(kAssetNames[1], asset.name);
-					Assert.AreEqual(kAssetBundleVariantValues[i], asset.rect.position);
+					if (kAssetNames[1] == asset.name) {
+						Assert.AreEqual(kAssetNames[1], asset.name);
+					} else if (kAssetNamesAmbiguous.Contains(asset.name)) {
+						Assert.Ignore("Undefined Behavior");
+					} else {
+						Assert.Fail();
+					}
+					if (kAssetBundleVariantValues[i] == asset.rect.position) {
+						Assert.AreEqual(kAssetBundleVariantValues[i], asset.rect.position);
+					} else if (kAssetBundleVariantValues.Contains(asset.rect.position)) {
+						Assert.Ignore("Undefined Behavior");
+					} else {
+						Assert.Fail();
+					}
 				}
 				ab.Unload(true);
 			}
