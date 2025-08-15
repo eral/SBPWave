@@ -1,7 +1,7 @@
 {
   "name": "eral.sbpwave",
   "version": "0.1.0",
-  "unity": "2023.1",
+  "unity": "2020.3",
   "displayName": "SBP Wave",
   "description": "Scriptable Build Pipeline with Variant",
   "dependencies": {

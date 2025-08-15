@@ -39,21 +39,21 @@ namespace eral.SBPWave {
 			for (int i = 0; i < buildTasks.Count; i++) {
 				var buildTaskType = buildTasks[i].GetType();
 				if (buildTaskType == typeof(CalculateSceneDependencyData)) {
-					if ((i <= 0) || (buildTasks[i - 1] is not ExportVariantMap)) {
+					if ((i <= 0) || !(buildTasks[i - 1] is ExportVariantMap)) {
 						buildTasks.Insert(i, new ExportVariantMap());
 						++i;
 					}
-					if ((i <= 1) || (buildTasks[i - 2] is not GenerateVariantMap)) {
+					if ((i <= 1) || !(buildTasks[i - 2] is GenerateVariantMap)) {
 						buildTasks.Insert(i - 1, new GenerateVariantMap());
 						++i;
 					}
 				} else if (buildTaskType == typeof(WriteSerializedFiles)) {
-					if ((i <= 0) || (buildTasks[i - 1] is not VariantlizeLinkDestination)) {
+					if ((i <= 0) || !(buildTasks[i - 1] is VariantlizeLinkDestination)) {
 						buildTasks.Insert(i, new VariantlizeLinkDestination());
 						++i;
 					}
 				} else if (buildTaskType == typeof(ArchiveAndCompressBundles)) {
-					if ((i <= 0) || (buildTasks[i - 1] is not VariantlizeArchives)) {
+					if ((i <= 0) || !(buildTasks[i - 1] is VariantlizeArchives)) {
 						buildTasks.Insert(i, new VariantlizeArchives());
 						++i;
 					}

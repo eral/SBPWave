@@ -25,14 +25,14 @@ namespace eral.SBPWave {
 			for (int i = 0; i < contextObjects.Length; i++) {
 				var contextObject = contextObjects[i];
 				if (contextObject is IDeterministicIdentifiers deterministicIdentifiers) {
-					if (contextObject is not VariantPackedIdentifiers) {
+					if (!(contextObject is VariantPackedIdentifiers)) {
 						contextObjects[i] = new CachedVariantPackedIdentifiers(deterministicIdentifiers);
 					}
 					return;
 				}
 			}
 			System.Array.Resize(ref contextObjects, contextObjects.Length + 1);
-			contextObjects[^1] = new CachedVariantPackedIdentifiers();
+			contextObjects[contextObjects.Length - 1] = new CachedVariantPackedIdentifiers();
 		}
 
 	}
