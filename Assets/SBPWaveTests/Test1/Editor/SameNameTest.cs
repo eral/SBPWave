@@ -29,6 +29,12 @@ namespace eral.SBPWave.Test.Test1 {
 		}
 
 		[UnityTest]
+		public IEnumerator SubAssetAndExtension() {
+			CreateAssetBundles(TestUtility.Style.SBPWave, Pattern.SubAssetAndExtension);
+			return Load(TestUtility.Style.SBPWave, Pattern.SubAssetAndExtension);
+		}
+
+		[UnityTest]
 		public IEnumerator DifferentClassScriptBuiltin() {
 			CreateAssetBundles(TestUtility.Style.Builtin, Pattern.DifferentClassScript);
 			return Load(TestUtility.Style.Builtin, Pattern.DifferentClassScript);
@@ -44,6 +50,12 @@ namespace eral.SBPWave.Test.Test1 {
 		public IEnumerator ScriptAndPrefabBuiltin() {
 			CreateAssetBundles(TestUtility.Style.Builtin, Pattern.ScriptAndPrefab);
 			return Load(TestUtility.Style.Builtin, Pattern.ScriptAndPrefab);
+		}
+
+		[UnityTest]
+		public IEnumerator SubAssetAndExtensionBuiltin() {
+			CreateAssetBundles(TestUtility.Style.Builtin, Pattern.SubAssetAndExtension);
+			return Load(TestUtility.Style.Builtin, Pattern.SubAssetAndExtension);
 		}
 
 		[OneTimeSetUp]
@@ -63,11 +75,12 @@ namespace eral.SBPWave.Test.Test1 {
 			DifferentClassScript,
 			DifferentNamespaceScript,
 			ScriptAndPrefab,
+			SubAssetAndExtension,
 		}
 		private const string kAssetsBasePath = "Assets/SBPWaveTests/Test1/Runtime/SameName";
 		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/SameName_";
 		private readonly string kAssetName = "Asset";
-		private readonly int[][] kAssetPickupIndices = new[]{new[]{0, 1}, new[]{0, 2}, new[]{0, 3}};
+		private readonly int[][] kAssetPickupIndices = new[]{new[]{0, 1}, new[]{0, 2}, new[]{0, 3}, new[]{4, 5}};
 		private readonly string kAssetBundleName = "samename";
 		private readonly string kAssetBundleVariant = "variant";
 
@@ -79,6 +92,8 @@ namespace eral.SBPWave.Test.Test1 {
 				$"{kAssetsBasePath}/script2/{kAssetName}.asset",
 				$"{kAssetsBasePath}/script3/{kAssetName}.asset",
 				$"{kAssetsBasePath}/prefab/{kAssetName}.prefab",
+				$"{kAssetsBasePath}/extsubasset/{kAssetName}.asset",
+				$"{kAssetsBasePath}/exttexture/{kAssetName}.png",
 			};
 			var builds = new[]{
 				new AssetBundleBuild{
@@ -115,11 +130,19 @@ namespace eral.SBPWave.Test.Test1 {
 			var abReq = ab.LoadAllAssetsAsync();
 			while (!abReq.isDone) yield return null;
 			var allAssets = abReq.allAssets;
-			{
+			switch (pattern) {
+			case Pattern.SubAssetAndExtension:
+				Assert.AreEqual(3, allAssets.Length);
+				foreach (var asset in allAssets) {
+					Assert.True(new[]{kAssetName, "png"}.Contains(asset.name));
+				}
+				break;
+			default:
 				Assert.AreEqual(2, allAssets.Length);
 				foreach (var asset in allAssets) {
 					Assert.AreEqual(kAssetName, asset.name);
 				}
+				break;
 			}
 			ab.Unload(true);
 		}
