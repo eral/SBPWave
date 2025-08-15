@@ -1,12 +1,10 @@
 using eral.SBPWave.Test.Internal.Editor;
 using NUnit.Framework;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
-using static UnityEditor.UIElements.ToolbarMenu;
 
 namespace eral.SBPWave.Test.Test1 {
 
@@ -14,37 +12,37 @@ namespace eral.SBPWave.Test.Test1 {
 		[UnityTest]
 		public IEnumerator DifferentClassScript() {
 			CreateAssetBundles(TestUtility.Style.SBPWave, Pattern.DifferentClassScript);
-			return Load(TestUtility.Style.SBPWave);
+			return Load(TestUtility.Style.SBPWave, Pattern.DifferentClassScript);
 		}
 
 		[UnityTest]
 		public IEnumerator DifferentNamespaceScript() {
 			CreateAssetBundles(TestUtility.Style.SBPWave, Pattern.DifferentNamespaceScript);
-			return Load(TestUtility.Style.SBPWave);
+			return Load(TestUtility.Style.SBPWave, Pattern.DifferentNamespaceScript);
 		}
 
 		[UnityTest]
 		public IEnumerator ScriptAndPrefab() {
 			CreateAssetBundles(TestUtility.Style.SBPWave, Pattern.ScriptAndPrefab);
-			return Load(TestUtility.Style.SBPWave);
+			return Load(TestUtility.Style.SBPWave, Pattern.ScriptAndPrefab);
 		}
 
 		[UnityTest]
 		public IEnumerator DifferentClassScriptBuiltin() {
 			CreateAssetBundles(TestUtility.Style.Builtin, Pattern.DifferentClassScript);
-			return Load(TestUtility.Style.Builtin);
+			return Load(TestUtility.Style.Builtin, Pattern.DifferentClassScript);
 		}
 
 		[UnityTest]
 		public IEnumerator DifferentNamespaceScriptBuiltin() {
 			CreateAssetBundles(TestUtility.Style.Builtin, Pattern.DifferentNamespaceScript);
-			return Load(TestUtility.Style.Builtin);
+			return Load(TestUtility.Style.Builtin, Pattern.DifferentNamespaceScript);
 		}
 
 		[UnityTest]
 		public IEnumerator ScriptAndPrefabBuiltin() {
 			CreateAssetBundles(TestUtility.Style.Builtin, Pattern.ScriptAndPrefab);
-			return Load(TestUtility.Style.Builtin);
+			return Load(TestUtility.Style.Builtin, Pattern.ScriptAndPrefab);
 		}
 
 		[OneTimeSetUp]
@@ -92,9 +90,9 @@ namespace eral.SBPWave.Test.Test1 {
 			TestUtility.BuildAssetBundles(style, assetBundlesPath, builds);
 		}
 
-		private IEnumerator Load(TestUtility.Style style) {
+		private IEnumerator Load(TestUtility.Style style, Pattern pattern) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
-			var abcReq = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleName}.{kAssetBundleVariant}");
+			var abcReq = AssetBundle.LoadFromFileAsync($"{assetBundlesPath}/{kAssetBundleName}_{pattern.ToString().ToLower()}.{kAssetBundleVariant}");
 			var ab = abcReq.assetBundle;
 			var abReq = ab.LoadAllAssetsAsync();
 			while (!abReq.isDone) yield return null;
