@@ -44,13 +44,14 @@ namespace eral.SBPWave {
 				//バリアント対象のアセットバンドルなら
 				//バリアント用のID算出を行う
 				var objectObj = ObjectIdentifier.ToObject(objectID);
+				var objectTypeFullName = objectObj.GetType().FullName;
 				if (objectObj is GameObject objectGo) {
 					//プレファブは内部にある全Objectが個別に入ってくるので、全てをバリアント用IDにすると衝突する
 					//その為プレファブの場合はルートのGameObject以外はバリアント用のID算出を行わないようにする
 					if (!objectGo.transform.parent) {//Missingであっても親が居るかを見るので「==null」にはしないこと
 						//GameObjectでルートなら
 						var addressableName = m_BundleBuildContent.Addresses[objectID.guid];
-						hashSource = addressableName;
+						hashSource = $"{addressableName}:{objectTypeFullName}";
 					} else {
 						//GameObjectでルート以外なら
 						//通常ID算出を使う
@@ -66,15 +67,15 @@ namespace eral.SBPWave {
 					var addressableName = m_BundleBuildContent.Addresses[objectID.guid];
 					var assetPath = AssetDatabase.GUIDToAssetPath(objectID.guid);
 					var assetExtWithoutDot = Path.GetExtension(assetPath).Substring(1);
-					hashSource = $"{addressableName}:{assetExtWithoutDot}";
+					hashSource = $"{addressableName}:{assetExtWithoutDot}:{objectTypeFullName}";
 				} else {
 					//それ以外なら
 					//サブアセット持ちの場合はサブアセットも個別に入ってくるので、サブアセット名も考慮してバリアント用IDにしないと衝突する
 					var addressableName = m_BundleBuildContent.Addresses[objectID.guid];
 					if (AssetDatabase.IsSubAsset(objectObj)) {
-						hashSource = $"{addressableName}:{objectObj.name}";
+						hashSource = $"{addressableName}:{objectObj.name}:{objectTypeFullName}";
 					} else {
-						hashSource = addressableName;
+						hashSource = $"{addressableName}:{objectTypeFullName}";
 					}
 				}
 			}
