@@ -59,6 +59,11 @@ namespace eral.SBPWave {
 					}
 				}
 			}
+#if SBPWAVE_AVOID_DUPLICATE_ADDRESSES_VALIDATION
+			if (!(buildTasks[0] is AvoidDuplicateAddressesValidation)) {
+				buildTasks.Insert(0, new AvoidDuplicateAddressesValidation());
+			}
+#endif
 		}
 	}
 }

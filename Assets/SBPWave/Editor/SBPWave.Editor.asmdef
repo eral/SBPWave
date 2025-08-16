@@ -14,6 +14,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.scriptablebuildpipeline",
+            "expression": "2.4.1",
+            "define": "SBPWAVE_AVOID_DUPLICATE_ADDRESSES_VALIDATION"
+        }
+    ],
     "noEngineReferences": false
 }

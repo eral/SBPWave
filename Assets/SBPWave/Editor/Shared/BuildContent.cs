@@ -8,7 +8,27 @@ namespace eral.SBPWave {
 
 	public class BundleBuildContent : super {
 		public BundleBuildContent(IEnumerable<AssetBundleBuild> bundleBuilds) : base(bundleBuilds.Select(SupportVariant)) {
+#if SBPWAVE_AVOID_DUPLICATE_ADDRESSES_VALIDATION
+			m_AddressesOfAvoidDuplicateAddressesValidation = bundleBuilds.Where(x=>x.addressableNames == null)
+				                                                         .SelectMany(x=>x.assetNames.Select(x=>KeyValuePair.Create(AssetDatabase.GUIDFromAssetPath(x), Path.GetFileNameWithoutExtension(x))))
+				                                                         .ToArray();
+#endif
 		}
+
+#if SBPWAVE_AVOID_DUPLICATE_ADDRESSES_VALIDATION
+		public void AvoidDuplicateAddressesValidation() {
+			if (m_AddressesOfAvoidDuplicateAddressesValidation != null) {
+				foreach (var pair in m_AddressesOfAvoidDuplicateAddressesValidation) {
+					Addresses[pair.Key] = pair.Value;
+				}
+				m_AddressesOfAvoidDuplicateAddressesValidation = null;
+			}
+		}
+#endif
+
+#if SBPWAVE_AVOID_DUPLICATE_ADDRESSES_VALIDATION
+		private KeyValuePair<GUID, string>[] m_AddressesOfAvoidDuplicateAddressesValidation = default;
+#endif
 
 		private static AssetBundleBuild SupportVariant(AssetBundleBuild bundleBuild) {
 			var isNotVariant = string.IsNullOrEmpty(bundleBuild.assetBundleVariant);
@@ -16,7 +36,11 @@ namespace eral.SBPWave {
 				assetBundleName = ((isNotVariant)? bundleBuild.assetBundleName: $"{bundleBuild.assetBundleName}.{bundleBuild.assetBundleVariant}"),
 				assetBundleVariant = null ,
 				assetNames = bundleBuild.assetNames,
+#if SBPWAVE_AVOID_DUPLICATE_ADDRESSES_VALIDATION
+				addressableNames = bundleBuild.addressableNames ?? bundleBuild.assetNames,
+#else
 				addressableNames = bundleBuild.addressableNames ?? bundleBuild.assetNames.Select(x=>Path.GetFileNameWithoutExtension(x)).ToArray(),
+#endif
 			};
 		}
 	}
