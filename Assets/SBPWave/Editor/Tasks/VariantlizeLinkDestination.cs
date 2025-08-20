@@ -8,15 +8,12 @@ using UnityEditor.Build.Pipeline.WriteTypes;
 namespace eral.SBPWave.Tasks {
 
 	public class VariantlizeLinkDestination : IBuildTask {
+		#region Public fields and properties
+
 		public int Version => 1;
 
-#pragma warning disable 649
-		[InjectContext(ContextUsage.In)]
-		private IBuildVariantMap m_VariantMap;
-
-		[InjectContext]
-		private IWriteData m_WriteData;
-#pragma warning restore 649
+		#endregion
+		#region Public methods
 
 		public ReturnCode Run() {
 			for (var i = 0; i < m_WriteData.WriteOperations.Count; i++) {
@@ -27,6 +24,19 @@ namespace eral.SBPWave.Tasks {
 
 			return ReturnCode.Success;
 		}
+
+		#endregion
+		#region Private fields and properties
+
+#pragma warning disable 649
+		[InjectContext(ContextUsage.In)]
+		private IBuildVariantMap m_VariantMap;
+
+		[InjectContext]
+		private IWriteData m_WriteData;
+#pragma warning restore 649
+
+		#endregion
 	}
 
 }

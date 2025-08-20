@@ -7,11 +7,16 @@ namespace eral.SBPWave {
 	using super = UnityEditor.Build.Pipeline.DefaultBuildTasks;
 
 	public static class DefaultBuildTasks {
+		#region Public types
+
 		public enum Preset {
 			AssetBundleCompatible                = super.Preset.AssetBundleCompatible,
 			AssetBundleBuiltInShaderExtraction   = super.Preset.AssetBundleBuiltInShaderExtraction,
 			AssetBundleShaderAndScriptExtraction = super.Preset.AssetBundleShaderAndScriptExtraction,
 		}
+
+		#endregion
+		#region Public methods
 
 		public static IList<IBuildTask> Create(Preset preset) {
 			return Create((super.Preset)preset);
@@ -65,6 +70,8 @@ namespace eral.SBPWave {
 			}
 #endif
 		}
+
+		#endregion
 	}
 }
 

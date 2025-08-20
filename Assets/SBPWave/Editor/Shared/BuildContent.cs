@@ -7,6 +7,8 @@ namespace eral.SBPWave {
 	using super = UnityEditor.Build.Pipeline.BundleBuildContent;
 
 	public class BundleBuildContent : super {
+		#region Public methods
+
 		public BundleBuildContent(IEnumerable<AssetBundleBuild> bundleBuilds) : base(bundleBuilds.Select(SupportVariant)) {
 #if SBPWAVE_AVOID_DUPLICATE_ADDRESSES_VALIDATION
 			m_AddressesOfAvoidDuplicateAddressesValidation = bundleBuilds.Where(x=>x.addressableNames == null)
@@ -26,9 +28,15 @@ namespace eral.SBPWave {
 		}
 #endif
 
+		#endregion
+		#region Private fields and properties
+
 #if SBPWAVE_AVOID_DUPLICATE_ADDRESSES_VALIDATION
 		private KeyValuePair<GUID, string>[] m_AddressesOfAvoidDuplicateAddressesValidation = default;
 #endif
+
+		#endregion
+		#region Private methods
 
 		private static AssetBundleBuild SupportVariant(AssetBundleBuild bundleBuild) {
 			var isNotVariant = string.IsNullOrEmpty(bundleBuild.assetBundleVariant);
@@ -43,6 +51,8 @@ namespace eral.SBPWave {
 #endif
 			};
 		}
+
+		#endregion
 	}
 
 }

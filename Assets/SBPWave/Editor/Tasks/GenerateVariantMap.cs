@@ -9,7 +9,29 @@ using UnityEditor.Build.Utilities;
 namespace eral.SBPWave.Tasks {
 
 	public class GenerateVariantMap : IBuildTask {
+		#region Public fields and properties
+
 		public int Version => 1;
+
+		#endregion
+		#region Public methods
+
+		public ReturnCode Run() {
+			if (m_VariantIdentifiers == null) {
+				m_VariantMap = null;
+				return ReturnCode.SuccessNotRun;
+			}
+
+			var buildVariantMap = new BuildVariantMap();
+			ApplyBundleLayoutInverse(buildVariantMap, m_Content.BundleLayout);
+			ApplyGroupInternalNames(buildVariantMap, m_Content.BundleLayout.Keys, m_VariantIdentifiers, m_PackingMethod);
+			m_VariantMap = buildVariantMap;
+
+			return ReturnCode.Success;
+		}
+
+		#endregion
+		#region Private fields and properties
 
 #pragma warning disable 649
 		[InjectContext(ContextUsage.In)]
@@ -25,19 +47,8 @@ namespace eral.SBPWave.Tasks {
 		private IBuildVariantMap m_VariantMap;
 #pragma warning restore 649
 
-		public ReturnCode Run() {
-			if (m_VariantIdentifiers == null) {
-				m_VariantMap = null;
-				return ReturnCode.SuccessNotRun;
-			}
-
-			var buildVariantMap = new BuildVariantMap();
-			ApplyBundleLayoutInverse(buildVariantMap, m_Content.BundleLayout);
-			ApplyGroupInternalNames(buildVariantMap, m_Content.BundleLayout.Keys, m_VariantIdentifiers, m_PackingMethod);
-			m_VariantMap = buildVariantMap;
-
-			return ReturnCode.Success;
-		}
+		#endregion
+		#region Private methods
 
 		private static void ApplyBundleLayoutInverse(BuildVariantMap buildVariantMap, IEnumerable<KeyValuePair<string, List<GUID>>> bundleLayout) {
 			var bundleLayoutInverse = buildVariantMap.BundleLayoutInverse;
@@ -76,6 +87,8 @@ namespace eral.SBPWave.Tasks {
 				}
 			}
 		}
+
+		#endregion
 	}
 
 }

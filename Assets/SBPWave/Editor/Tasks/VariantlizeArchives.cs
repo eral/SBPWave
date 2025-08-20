@@ -8,15 +8,12 @@ using UnityEditor.Build.Pipeline.Interfaces;
 namespace eral.SBPWave.Tasks {
 
 	public class VariantlizeArchives : IBuildTask {
+		#region Public fields and properties
+
 		public int Version => 1;
 
-#pragma warning disable 649
-		[InjectContext(ContextUsage.In)]
-		private IBuildVariantMap m_VariantMap;
-
-		[InjectContext(ContextUsage.In)]
-		private IBuildResults m_Results;
-#pragma warning restore 649
+		#endregion
+		#region Public methods
 
 		public ReturnCode Run() {
 			var linkerFileNames = m_VariantMap.LinkerFileNames;
@@ -40,6 +37,19 @@ namespace eral.SBPWave.Tasks {
 
 			return ReturnCode.Success;
 		}
+
+		#endregion
+		#region Private fields and properties
+
+#pragma warning disable 649
+		[InjectContext(ContextUsage.In)]
+		private IBuildVariantMap m_VariantMap;
+
+		[InjectContext(ContextUsage.In)]
+		private IBuildResults m_Results;
+#pragma warning restore 649
+
+		#endregion
 	}
 
 }

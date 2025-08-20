@@ -5,6 +5,8 @@ using UnityEditor;
 namespace eral.SBPWave {
 
 	public class BuildVariantMap : IBuildVariantMap {
+		#region Public fields and properties
+
 		/// <summary>
 		/// アセットのGUIDから格納されているアセットバンドル名の照会
 		/// </summary>
@@ -21,6 +23,8 @@ namespace eral.SBPWave {
 		/// </summary>
 		/// <remarks>archive:/CAB-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/CAB-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</remarks>
 		public Dictionary<string, string> LinkerNames {get;set;} = new Dictionary<string, string>();
+
+		#endregion
 	}
 
 }

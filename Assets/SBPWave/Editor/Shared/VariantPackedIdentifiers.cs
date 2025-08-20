@@ -10,8 +10,13 @@ using UnityEngine;
 namespace eral.SBPWave {
 
 	public class VariantPackedIdentifiers : IVariantIdentifiers, IImportVariantMap {
+		#region Public fields and properties
+
 		public IBundleBuildContent BundleBuildContent {set => m_BundleBuildContent = value;}
 		public IBuildVariantMap BuildVariantMap {set => m_BuildVariantMap = value;}
+
+		#endregion
+		#region Public methods
 
 		public virtual string GenerateInternalFileName(string name) {
 			return m_DeterministicIdentifiers.GenerateInternalFileName(name);
@@ -37,6 +42,9 @@ namespace eral.SBPWave {
 		public VariantPackedIdentifiers(IDeterministicIdentifiers deterministicIdentifiers = null) {
 			m_DeterministicIdentifiers = deterministicIdentifiers ?? new PrefabPackedIdentifiers();
 		}
+
+		#endregion
+		#region Protected methods
 
 		protected long VariantSerializationIndexFromObjectIdentifier(ObjectIdentifier objectID) {
 			var hashSource = default(object);
@@ -87,9 +95,14 @@ namespace eral.SBPWave {
 			}
 		}
 
+		#endregion
+		#region Private fields and properties
+
 		private IDeterministicIdentifiers m_DeterministicIdentifiers;
 		private IBundleBuildContent m_BundleBuildContent = default;
 		private IBuildVariantMap m_BuildVariantMap = default;
+
+		#endregion
 	}
 
 }

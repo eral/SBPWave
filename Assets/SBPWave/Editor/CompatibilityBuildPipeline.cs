@@ -14,6 +14,8 @@ namespace eral.SBPWave {
 #endif
 
 	public static class CompatibilityBuildPipeline {
+		#region Public methods
+
 		public static CompatibilityAssetBundleManifest BuildAssetBundles(string outputPath, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform) {
 			var buildInput = ContentBuildInterface.GenerateAssetBundleBuilds();
 			if (targetPlatform == 0) {
@@ -36,6 +38,9 @@ namespace eral.SBPWave {
 			return BuildAssetBundles_Internal(buildParameters.outputPath, new BundleBuildContent(buildParameters.bundleDefinitions), buildParameters.options, buildParameters.targetPlatform);
 		}
 #endif
+
+		#endregion
+		#region Internal methods
 
         internal static CompatibilityAssetBundleManifest BuildAssetBundles_Internal(string outputPath, IBundleBuildContent content, BuildAssetBundleOptions options, BuildTarget targetPlatform)
         {
@@ -82,6 +87,7 @@ namespace eral.SBPWave {
             return manifest;
         }
 
+		#endregion
 	}
 
 }

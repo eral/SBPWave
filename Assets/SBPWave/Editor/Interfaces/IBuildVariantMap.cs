@@ -5,6 +5,8 @@ using UnityEditor.Build.Pipeline.Interfaces;
 namespace eral.SBPWave.Interfaces {
 
 	public interface IBuildVariantMap : IContextObject {
+		#region Public fields and properties
+
 		/// <summary>
 		/// アセットのGUIDから格納されているアセットバンドル名の照会
 		/// </summary>
@@ -21,6 +23,8 @@ namespace eral.SBPWave.Interfaces {
 		/// </summary>
 		/// <remarks>archive:/CAB-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/CAB-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</remarks>
 		Dictionary<string, string> LinkerNames{get;}
+
+		#endregion
 	}
 
 }

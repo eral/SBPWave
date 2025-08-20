@@ -8,6 +8,8 @@ using UnityEngine;
 namespace eral.SBPWave.WriteTypes {
 
 	public class VariantAssetBundleWriteOperation : IWriteOperation {
+		#region Public fields and properties
+
 		public WriteCommand Command {
 			get => m_AssetBundleWriteOperation.Command;
 			set => m_AssetBundleWriteOperation.Command = value;
@@ -24,6 +26,9 @@ namespace eral.SBPWave.WriteTypes {
 			get => m_AssetBundleWriteOperation.DependencyHash;
 			set => m_AssetBundleWriteOperation.DependencyHash = value;
 		}
+
+		#endregion
+		#region Public methods
 
 		public Hash128 GetHash128() => m_AssetBundleWriteOperation.GetHash128();
 
@@ -85,8 +90,13 @@ namespace eral.SBPWave.WriteTypes {
 			m_BuildVariantMap = BuildVariantMap;
 		}
 
+		#endregion
+		#region Private fields and properties
+
 		private AssetBundleWriteOperation m_AssetBundleWriteOperation;
 		private IBuildVariantMap m_BuildVariantMap;
+
+		#endregion
 	}
 
 }

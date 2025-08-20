@@ -5,6 +5,8 @@ using UnityEditor.Build.Pipeline.Interfaces;
 namespace eral.SBPWave {
 
 	public class CachedVariantPackedIdentifiers : VariantPackedIdentifiers {
+		#region Public methods
+
 		public override long SerializationIndexFromObjectIdentifier(ObjectIdentifier objectID) {
 			if (m_VariantSerializationIndexFromObjectIdentifierCache.TryGetValue(objectID, out var cache)) {
 				return cache;
@@ -22,7 +24,12 @@ namespace eral.SBPWave {
 		public CachedVariantPackedIdentifiers(IDeterministicIdentifiers deterministicIdentifiers = null) : base(deterministicIdentifiers) {
 		}
 
+		#endregion
+		#region Private fields and properties
+
 		private Dictionary<ObjectIdentifier, long> m_VariantSerializationIndexFromObjectIdentifierCache = new Dictionary<ObjectIdentifier, long>();
+
+		#endregion
 	}
 
 }

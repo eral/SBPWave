@@ -23,6 +23,8 @@ namespace eral.SBPWave.Utilities {
 	}
 
 	public static class BuildReferenceMapUtility {
+		#region Public methods
+
 		public static BuildReferenceMapHandle LoadFrom(BuildReferenceMap buildReferenceMap) {
 			var refMapJson = s_BuildReferenceMapSerializeToJson(buildReferenceMap);
 			var jsonReferenceMap = JsonUtility.FromJson<JsonReferenceMap>(refMapJson);
@@ -56,6 +58,9 @@ namespace eral.SBPWave.Utilities {
 			s_BuildReferenceMapDeserializeFromJson = (refMap, json)=>DeserializeFromJsonMethodInfo.Invoke(refMap, new object[]{json});
 		}
 
+		#endregion
+		#region Private types
+
 		private class JsonReferenceMap {
 			[System.Serializable]
 			public struct Location {
@@ -75,8 +80,13 @@ namespace eral.SBPWave.Utilities {
 			public List<string> m_Paths;
 		}
 
+		#endregion
+		#region Private const fields
+
 		private static readonly System.Func<BuildReferenceMap, string> s_BuildReferenceMapSerializeToJson;
 		private static readonly System.Action<BuildReferenceMap, string> s_BuildReferenceMapDeserializeFromJson;
+
+		#endregion
 	}
 
 }

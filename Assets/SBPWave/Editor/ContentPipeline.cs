@@ -6,6 +6,8 @@ namespace eral.SBPWave {
 	using super = UnityEditor.Build.Pipeline.ContentPipeline;
 
 	public static class ContentPipeline {
+		#region Public methods
+
 		public static ReturnCode BuildAssetBundles(IBundleBuildParameters parameters, IBundleBuildContent content, out IBundleBuildResults result) {
 			var taskList = DefaultBuildTasks.Create(DefaultBuildTasks.Preset.AssetBundleCompatible);
 			return BuildAssetBundles_Internal(parameters, content, out result, taskList);
@@ -15,6 +17,9 @@ namespace eral.SBPWave {
 			DefaultBuildTasks.SupportVariant(taskList);
 			return BuildAssetBundles_Internal(parameters, content, out result, taskList, contextObjects);
 		}
+
+		#endregion
+		#region Private methods
 
 		private static ReturnCode BuildAssetBundles_Internal(IBundleBuildParameters parameters, IBundleBuildContent content, out IBundleBuildResults result, IList<IBuildTask> taskList, params IContextObject[] contextObjects) {
 			SupportVariant(ref contextObjects);
@@ -35,6 +40,7 @@ namespace eral.SBPWave {
 			contextObjects[contextObjects.Length - 1] = new CachedVariantPackedIdentifiers();
 		}
 
+		#endregion
 	}
 
 }
