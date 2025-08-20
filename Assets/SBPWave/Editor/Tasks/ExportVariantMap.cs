@@ -10,13 +10,13 @@ namespace eral.SBPWave.Tasks {
 
 #pragma warning disable 649
 		[InjectContext(ContextUsage.In)]
-		IBundleBuildContent m_Content;
+		private IBundleBuildContent m_Content;
 
 		[InjectContext(ContextUsage.In, true)]
-		IBuildVariantMap m_VariantMap;
+		private IBuildVariantMap m_VariantMap;
 
 		[InjectContext(ContextUsage.In, true)]
-		IImportVariantMap m_ImportVariantMap; //VariantMapを使う場合タスクならInjectContext(ContextUsage.In)するだけだが、VariantPackedIdentifiers(IDeterministicIdentifiers)はタスク側ではないのでこれで受け渡す
+		private IImportVariantMap m_ImportVariantMap; //VariantMapを使う場合タスクならInjectContext(ContextUsage.In)するだけだが、VariantPackedIdentifiers(IDeterministicIdentifiers)はタスク側ではないのでこれで受け渡す
 #pragma warning restore 649
 
 		public ReturnCode Run() {

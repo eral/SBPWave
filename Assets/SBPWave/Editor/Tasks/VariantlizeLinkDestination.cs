@@ -12,10 +12,10 @@ namespace eral.SBPWave.Tasks {
 
 #pragma warning disable 649
 		[InjectContext(ContextUsage.In)]
-		IBuildVariantMap m_VariantMap;
+		private IBuildVariantMap m_VariantMap;
 
 		[InjectContext]
-		IWriteData m_WriteData;
+		private IWriteData m_WriteData;
 #pragma warning restore 649
 
 		public ReturnCode Run() {

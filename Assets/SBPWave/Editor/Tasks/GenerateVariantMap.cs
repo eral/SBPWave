@@ -13,16 +13,16 @@ namespace eral.SBPWave.Tasks {
 
 #pragma warning disable 649
 		[InjectContext(ContextUsage.In)]
-		IBundleBuildContent m_Content;
+		private IBundleBuildContent m_Content;
 
 		[InjectContext(ContextUsage.In)]
-		IDeterministicIdentifiers m_PackingMethod;
+		private IDeterministicIdentifiers m_PackingMethod;
 
 		[InjectContext(ContextUsage.In, true)]
-		IVariantIdentifiers m_VariantIdentifiers;
+		private IVariantIdentifiers m_VariantIdentifiers;
 
 		[InjectContext(ContextUsage.Out, true)]
-		IBuildVariantMap m_VariantMap;
+		private IBuildVariantMap m_VariantMap;
 #pragma warning restore 649
 
 		public ReturnCode Run() {

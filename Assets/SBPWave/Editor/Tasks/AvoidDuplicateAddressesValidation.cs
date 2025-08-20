@@ -10,7 +10,7 @@ namespace eral.SBPWave.Tasks {
 #if SBPWAVE_AVOID_DUPLICATE_ADDRESSES_VALIDATION
 #pragma warning disable 649
 		[InjectContext(ContextUsage.In)]
-		IBundleBuildContent m_Content;
+		private IBundleBuildContent m_Content;
 #pragma warning restore 649
 #endif
 
