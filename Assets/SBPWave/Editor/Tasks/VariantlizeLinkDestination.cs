@@ -1,7 +1,5 @@
 using eral.SBPWave.Interfaces;
-using eral.SBPWave.Utilities;
 using eral.SBPWave.WriteTypes;
-using System.Linq;
 using UnityEditor.Build.Pipeline;
 using UnityEditor.Build.Pipeline.Injector;
 using UnityEditor.Build.Pipeline.Interfaces;
