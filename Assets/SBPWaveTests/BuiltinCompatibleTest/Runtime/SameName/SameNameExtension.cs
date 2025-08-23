@@ -9,10 +9,18 @@ using UnityEditor;
 namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 
 	public class SameNameExtension : ScriptableObject {
+		#region Public fields and properties
+
 		public SameNameExtensionSubAsset Value => m_Value;
+
+		#endregion
+		#region Private fields and properties
 
 		[SerializeField]
 		private SameNameExtensionSubAsset m_Value;
+
+		#endregion
+		#region Private methods
 
 #if UNITY_EDITOR
 		[MenuItem("Assets/Create/SBPWaveTests/BuiltinCompatibleTest/SameNameExtension")]
@@ -49,6 +57,8 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 			}
 		}
 #endif
+
+		#endregion
 	}
 
 }

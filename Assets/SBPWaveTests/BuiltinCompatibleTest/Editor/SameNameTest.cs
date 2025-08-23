@@ -10,6 +10,8 @@ using UnityEngine.TestTools;
 namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 
 	public class SameNameTest {
+		#region Public methods
+
 		[UnityTest]
 		public IEnumerator DifferentClassScript() {
 			CreateAssetBundles(TestUtility.Style.SBPWave, Pattern.DifferentClassScript);
@@ -71,18 +73,28 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 			AssetBundle.GetAllLoadedAssetBundles().ToList().ForEach(x=>x.Unload(true));
 		}
 
+		#endregion
+		#region Private types
+
 		private enum Pattern {
 			DifferentClassScript,
 			DifferentNamespaceScript,
 			ScriptAndPrefab,
 			SubAssetAndExtension,
 		}
+
+		#endregion
+		#region Private const fields
+
 		private const string kAssetsBasePath = "Assets/SBPWaveTests/BuiltinCompatibleTest/Runtime/SameName";
 		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/SameName_";
 		private readonly string kAssetName = "Asset";
 		private readonly int[][] kAssetPickupIndices = new[]{new[]{0, 1}, new[]{0, 2}, new[]{0, 3}, new[]{4, 5}};
 		private readonly string kAssetBundleName = "samename";
 		private readonly string kAssetBundleVariant = "variant";
+
+		#endregion
+		#region Private methods
 
 		private void CreateAssetBundles(TestUtility.Style style, Pattern pattern) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
@@ -146,6 +158,8 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 			}
 			ab.Unload(true);
 		}
+
+		#endregion
 	}
 
 }
