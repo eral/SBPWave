@@ -9,6 +9,8 @@ using UnityEngine.TestTools;
 namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 
 	public class TexturesTest {
+		#region Public methods
+
 		[UnityTest]
 		public IEnumerator LoadNormal() {
 			CreateAssetBundles(TestUtility.Style.SBPWave);
@@ -94,6 +96,9 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 			AssetBundle.GetAllLoadedAssetBundles().ToList().ForEach(x=>x.Unload(true));
 		}
 
+		#endregion
+		#region Private const fields
+
 		private const string kAssetsBasePath = "Assets/SBPWaveTests/BuiltinCompatibleTest/Runtime/Textures";
 		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/Textures_";
 		private readonly string[] kAssetNames = new[]{"Top", "Tex"};
@@ -105,6 +110,9 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 		                                                             , new[]{new Color32(0x00, 0x00, 0xFF, 0xFF),new Color32(0x00, 0xFF, 0xFF, 0xFF)}
 		                                                             };
 		
+		#endregion
+		#region Private methods
+
 		private void CreateAssetBundles(TestUtility.Style style) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
 			TestUtility.CreateFolder(assetBundlesPath);
@@ -240,6 +248,8 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 			ab.Unload(true);
 			ab2?.Unload(true);
 		}
+
+		#endregion
 	}
 
 }
