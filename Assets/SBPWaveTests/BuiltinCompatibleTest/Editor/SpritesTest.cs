@@ -9,6 +9,8 @@ using UnityEngine.TestTools;
 namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 
 	public class SpritesTest {
+		#region Public methods
+
 		[UnityTest]
 		public IEnumerator LoadNormal() {
 			CreateAssetBundles(TestUtility.Style.SBPWave);
@@ -70,6 +72,9 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 			AssetBundle.GetAllLoadedAssetBundles().ToList().ForEach(x=>x.Unload(true));
 		}
 
+		#endregion
+		#region Private const fields
+
 		private const string kAssetsBasePath = "Assets/SBPWaveTests/BuiltinCompatibleTest/Runtime/Sprites";
 		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/Sprites_";
 		private readonly string[] kAssetNames = new[]{"Top", "Tex"};
@@ -79,6 +84,9 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 
 		private readonly string[] kAssetNamesAmbiguous = new[]{"Tex", "Dummy_0", "Dummy_1", "Dummy_2"};
 		private readonly Vector2[] kAssetBundleVariantValuesAmbiguous = new[]{new Vector2(1,1), new Vector2(1,9), new Vector2(9,1), new Vector2(9,9)};
+
+		#endregion
+		#region Private methods
 
 		private void CreateAssetBundles(TestUtility.Style style) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
@@ -194,6 +202,8 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 			ab.Unload(true);
 			ab2?.Unload(true);
 		}
+
+		#endregion
 	}
 
 }
