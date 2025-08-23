@@ -8,12 +8,12 @@ using UnityEngine.Build.Pipeline;
 namespace eral.SBPWave.Test.Internal.Editor {
 
 	public class TestUtility {
-		public const BuildAssetBundleOptions buildAssetBundleOptions = BuildAssetBundleOptions.ChunkBasedCompression
-		                                                             | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension
+		public const BuildAssetBundleOptions kBuildAssetBundleOptions = BuildAssetBundleOptions.ChunkBasedCompression
+		                                                              | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension
 #if UNITY_2022_1_OR_NEWER
-		                                                             | BuildAssetBundleOptions.StripUnatlasedSpriteCopies
+		                                                              | BuildAssetBundleOptions.StripUnatlasedSpriteCopies
 #endif
-		                                                             | BuildAssetBundleOptions.AssetBundleStripUnityVersion;
+		                                                              | BuildAssetBundleOptions.AssetBundleStripUnityVersion;
 
 		public static void CreateFolder(string path) {
 			if (!Directory.Exists(path)) {
@@ -66,7 +66,7 @@ namespace eral.SBPWave.Test.Internal.Editor {
 		}
 
 		public static CompatibilityAssetBundleManifest BuildAssetBundles(Style style, string outputPath, AssetBundleBuild[] builds) {
-			return BuildAssetBundles(style, outputPath, builds, buildAssetBundleOptions, EditorUserBuildSettings.activeBuildTarget);
+			return BuildAssetBundles(style, outputPath, builds, kBuildAssetBundleOptions, EditorUserBuildSettings.activeBuildTarget);
 		}
 		public static CompatibilityAssetBundleManifest BuildAssetBundles(Style style, string outputPath, AssetBundleBuild[] builds, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform) {
 			var buildAssetBundles = new System.Func<string, AssetBundleBuild[], BuildAssetBundleOptions, BuildTarget, CompatibilityAssetBundleManifest>[]{
