@@ -16,7 +16,7 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 
 #if UNITY_EDITOR
 		[MenuItem("Assets/Create/SBPWaveTests/BuiltinCompatibleTest/SameNameExtension")]
-		public static void CreateAsset() {
+		private static void CreateAsset() {
 			var asset = CreateInstance<SameNameExtension>();
 
 			var resourceFile = AssetDatabase.GetAssetPath(Selection.activeObject);
