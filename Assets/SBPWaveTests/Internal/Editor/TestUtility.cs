@@ -8,12 +8,46 @@ using UnityEngine.Build.Pipeline;
 namespace eral.SBPWave.Test.Internal.Editor {
 
 	public class TestUtility {
+		#region Public types
+
+		public enum Style {
+			SBPWave,
+			Builtin,
+		}
+
+		#endregion
+		#region Public const fields
+
 		public const BuildAssetBundleOptions kBuildAssetBundleOptions = BuildAssetBundleOptions.ChunkBasedCompression
 		                                                              | BuildAssetBundleOptions.DisableLoadAssetByFileNameWithExtension
 #if UNITY_2022_1_OR_NEWER
 		                                                              | BuildAssetBundleOptions.StripUnatlasedSpriteCopies
 #endif
 		                                                              | BuildAssetBundleOptions.AssetBundleStripUnityVersion;
+
+		#endregion
+		#region Public methods
+
+		public static void CallAllStyles(System.Action<Style> action) {
+			foreach (Style i in System.Enum.GetValues(typeof(Style))) {
+				action(i);
+			}
+		}
+
+		public static string AddStyleStringToEnd(Style style, string src) {
+			return $"{src}{style}";
+		}
+
+		public static CompatibilityAssetBundleManifest BuildAssetBundles(Style style, string outputPath, AssetBundleBuild[] builds) {
+			return BuildAssetBundles(style, outputPath, builds, kBuildAssetBundleOptions, EditorUserBuildSettings.activeBuildTarget);
+		}
+		public static CompatibilityAssetBundleManifest BuildAssetBundles(Style style, string outputPath, AssetBundleBuild[] builds, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform) {
+			var buildAssetBundles = new System.Func<string, AssetBundleBuild[], BuildAssetBundleOptions, BuildTarget, CompatibilityAssetBundleManifest>[]{
+				CompatibilityBuildPipeline.BuildAssetBundles,
+				BuildAssetBundlesBuiltin,
+			};
+			return buildAssetBundles[(int)style](outputPath, builds, assetBundleOptions, targetPlatform);
+		}
 
 		public static void CreateFolder(string path) {
 			if (!Directory.Exists(path)) {
@@ -50,31 +84,8 @@ namespace eral.SBPWave.Test.Internal.Editor {
 			}
 		}
 
-		public enum Style {
-			SBPWave,
-			Builtin,
-		}
-
-		public static void CallAllStyles(System.Action<Style> action) {
-			foreach (Style i in System.Enum.GetValues(typeof(Style))) {
-				action(i);
-			}
-		}
-
-		public static string AddStyleStringToEnd(Style style, string src) {
-			return $"{src}{style}";
-		}
-
-		public static CompatibilityAssetBundleManifest BuildAssetBundles(Style style, string outputPath, AssetBundleBuild[] builds) {
-			return BuildAssetBundles(style, outputPath, builds, kBuildAssetBundleOptions, EditorUserBuildSettings.activeBuildTarget);
-		}
-		public static CompatibilityAssetBundleManifest BuildAssetBundles(Style style, string outputPath, AssetBundleBuild[] builds, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform) {
-			var buildAssetBundles = new System.Func<string, AssetBundleBuild[], BuildAssetBundleOptions, BuildTarget, CompatibilityAssetBundleManifest>[]{
-				CompatibilityBuildPipeline.BuildAssetBundles,
-				BuildAssetBundlesBuiltin,
-			};
-			return buildAssetBundles[(int)style](outputPath, builds, assetBundleOptions, targetPlatform);
-		}
+		#endregion
+		#region Private methods
 
 		private static CompatibilityAssetBundleManifest BuildAssetBundlesBuiltin(string outputPath, AssetBundleBuild[] builds, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform) {
 			var manifestBuiltin = BuildPipeline.BuildAssetBundles(outputPath, builds, assetBundleOptions, targetPlatform);
@@ -92,6 +103,8 @@ namespace eral.SBPWave.Test.Internal.Editor {
 			manifest.SetResults(results);
 			return manifest;
 		}
+
+		#endregion
 	}
 
 }
