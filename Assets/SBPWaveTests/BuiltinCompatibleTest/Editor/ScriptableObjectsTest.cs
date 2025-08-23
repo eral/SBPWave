@@ -9,6 +9,8 @@ using UnityEngine.TestTools;
 namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 
 	public class ScriptableObjectsTest {
+		#region Public methods
+
 		[UnityTest]
 		public IEnumerator LoadNormal() {
 			CreateAssetBundles(TestUtility.Style.SBPWave);
@@ -70,12 +72,18 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 			AssetBundle.GetAllLoadedAssetBundles().ToList().ForEach(x=>x.Unload(true));
 		}
 
+		#endregion
+		#region Private const fields
+
 		private const string kAssetsBasePath = "Assets/SBPWaveTests/BuiltinCompatibleTest/Runtime/ScriptableObjects";
 		private const string kAssetBundlesPath = "Assets/SBPWaveTests/AssetBundles~/ScriptableObjects_";
 		private readonly string[] kAssetNames = new[]{"Top", "Value"};
 		private readonly string[] kAssetBundleNames = new[]{"scriptableobjects_top", "scriptableobjects_value"};
 		private readonly string[] kAssetBundleVariants = new[]{"int10001", "int10002"};
 		private readonly int[] kAssetBundleVariantValues = new[]{10001, 10002};
+
+		#endregion
+		#region Private methods
 
 		private void CreateAssetBundles(TestUtility.Style style) {
 			var assetBundlesPath = TestUtility.AddStyleStringToEnd(style, kAssetBundlesPath);
@@ -173,6 +181,8 @@ namespace eral.SBPWave.Test.BuiltinCompatibleTest {
 			ab.Unload(true);
 			ab2?.Unload(true);
 		}
+
+		#endregion
 	}
 
 }
